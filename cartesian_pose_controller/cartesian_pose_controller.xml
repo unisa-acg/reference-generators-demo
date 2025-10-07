@@ -1,0 +1,9 @@
+<library path="cartesian_pose_controller">
+  <class name="cartesian_pose_controller/CartesianPoseController"
+         type="cartesian_pose_controller::CartesianPoseController"
+         base_class_type="controller_interface::ChainableControllerInterface">
+    <description>
+      A cartesian pose controller developed by the Automatic Control Group of the University of Salerno, Italy.
+    </description>
+  </class>
+</library>

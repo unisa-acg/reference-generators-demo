@@ -1,0 +1,101 @@
+joint_space_reference_generator:
+  joints: {
+    type: string_array,
+    description: "Specifies which joints will be used by the controller.",
+    read_only: true
+  }
+  joint_space_command_controller: {
+    type: string,
+    description: "Name of the controller that receives joint space commands and/or wrench commands. If no joint space controller is used, leave joint_space_command_interfaces empty and this parameter will be ignored.",
+    read_only: true,
+    default_value: ""
+  }
+  joint_space_command_interfaces: {
+    type: string_array,
+    description: "List of command interfaces used to send joint space commands. If no joint space controller is used, leave this list empty.",
+    default_value: [],
+    read_only: true,
+    validation:
+    {
+      unique<>: null,
+      subset_of<>: [["position", "velocity", "acceleration", "effort", "wrench",]]
+    }
+  }
+  task_space_command_controller: {
+    type: string,
+    description: "Name of the controller that receives task space commands. If no task space controller is used, leave task_space_command_interfaces empty and this parameter will be ignored.",
+    read_only: true,
+    default_value: ""
+  }
+  task_space_command_interfaces: {
+    type: string_array,
+    description: "List of command interfaces used to send task space commands. If no task space controller is used, leave this list empty.",
+    default_value: [],
+    read_only: true,
+    validation:
+    {
+      unique<>: null,
+      subset_of<>: [["pose", "twist", "acceleration", "wrench", "wrench_derivative",]]
+    }
+  }
+  command_interfaces_names_override:
+    joint_position: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the joint position interface.",
+      default_value: [],
+      read_only: true
+    }
+    joint_velocity: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the joint velocity interface.",
+      default_value: [],
+      read_only: true
+    }
+    joint_acceleration: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the joint acceleration interface.",
+      default_value: [],
+      read_only: true
+    }
+    joint_effort: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the joint effort interface.",
+      default_value: [],
+      read_only: true
+    }
+    joint_wrench: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the joint wrench interface.",
+      default_value: [],
+      read_only: true
+    }
+    task_space_pose: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the task space pose interface.",
+      default_value: [],
+      read_only: true
+    }
+    task_space_velocity: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the task space velocity interface.",
+      default_value: [],
+      read_only: true
+    }
+    task_space_acceleration: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the task space acceleration interface.",
+      default_value: [],
+      read_only: true
+    }
+    task_space_wrench: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the task space wrench interface.",
+      default_value: [],
+      read_only: true
+    }
+    task_space_wrench_derivative: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for command interfaces, which are generated as described in the README.md file, specifically for the task space wrench derivative interface.",
+      default_value: [],
+      read_only: true
+    }

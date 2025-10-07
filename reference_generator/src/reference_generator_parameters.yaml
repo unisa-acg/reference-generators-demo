@@ -1,0 +1,101 @@
+reference_generator:
+  joints: {
+    type: string_array,
+    description: "Specifies which joints will be used by the controller. Note that the joints specified in this array must match the number and the order of the references received by the controller.",
+    read_only: true
+  }
+  state_interfaces: {
+    type: string_array,
+    description: "Specifies the state interfaces that the controller will read from. Position is always required.",
+    default_value: ["position"],
+    read_only: true,
+    validation: {
+      unique<>: null,
+      not_empty<>: null,
+      subset_of<>: [["position", "velocity", "acceleration", "effort",]]
+    }
+  }
+  robot_name: {
+    type: string,
+    description: "Specifies the name of the robot. This name is used to construct the names of the state interfaces.",
+  }
+  state_interfaces_names_override:
+    position: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for state interfaces, which are generated as described in the README.md file, specifically for the position interface.",
+      default_value: [],
+      read_only: true
+    }
+    velocity: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for state interfaces, which are generated as described in the README.md file, specifically for the velocity interface.",
+      default_value: [],
+      read_only: true
+    }
+    acceleration: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for state interfaces, which are generated as described in the README.md file, specifically for the acceleration interface.",
+      default_value: [],
+      read_only: true
+    }
+    effort: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names for state interfaces, which are generated as described in the README.md file, specifically for the effort interface.",
+      default_value: [],
+      read_only: true
+    }
+  kinematics:
+    plugin_name: {
+      type: string,
+      description: "Specifies the name of the kinematics plugin to load.",
+      validation: {
+        not_empty<>: null,
+      }
+    }
+    plugin_package: {
+      type: string,
+      description: "Specifies the package name that contains the kinematics plugin.",
+      validation: {
+        not_empty<>: null,
+      }
+    }
+    # base: { # This parameter is commented out, please refer to "Controller Configuration" section of the README.md file for more information.
+    #   type: string,
+    #   description: "Specifies the base link of the robot description used by the kinematics plugin."
+    # }
+    tip: {
+      type: string,
+      description: "Specifies the end effector link of the robot description used by the kinematics plugin.",
+      validation: {
+        not_empty<>: null,
+      }
+    }
+  task_space_reference_frame: {
+    type: string,
+    description: "Specifies the frame with respect to which task space references are output.",
+    validation: {
+      not_empty<>: null,
+    }
+  }
+  wrench_reference_frame: {
+    type: string,
+    description: "Specifies the wrench frame with respect to which wrench references are output.",
+    validation: {
+      not_empty<>: null,
+    }
+  }
+  publish_task_space_reference:
+    enable: {
+      type: bool,
+      description: "Specifies whether the task space reference of the end effector should be published.",
+      default_value: true
+    }
+    frequency: {
+      type: int,
+      description: "Specifies the maximum frequency at which the task space reference tries to publish [Hz].",
+      default_value: 5,
+      read_only: true,
+      validation: {
+        gt: [ 0 ]
+      }
+    }

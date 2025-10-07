@@ -1,0 +1,22 @@
+# The task-space trajectory to follow
+acg_control_msgs/TaskSpaceTrajectory task_space_trajectory
+
+---
+int32 error_code
+int32 SUCCESSFUL = 0
+int32 INVALID_GOAL = -1
+int32 OLD_HEADER_TIMESTAMP = -2
+int32 TRAJECTORY_ABORTED = -3
+
+# Human readable description of the error code. Contains complementary
+# information that is especially useful when execution fails, for instance:
+# - INVALID_GOAL: The reason for the invalid goal (e.g., the requested
+#   trajectory requires a command that differ significantly from the
+#   robot's current state).
+string error_string
+
+---
+std_msgs/Header header
+acg_control_msgs/TaskSpaceTrajectoryPoint desired
+acg_control_msgs/TaskSpaceTrajectoryPoint actual
+acg_control_msgs/TaskSpaceTrajectoryPoint error

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>acg_common_libraries</name>
+  <version>0.1.0</version>
+  <description>A package developed by Automatic Control Group to collect common libraries and utility functions</description>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <author email="drisi@unisa.it">Davide Risi</author>
+  <author email="alangella@unisa.it">Antonio Langella</author>
+  <author email="a.coone@studenti.unisa.it">Alessio Coone</author>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>acg_control_msgs</depend>
+  <depend>ament_cmake</depend>
+  <depend>eigen</depend>
+  <depend>geometry_msgs</depend>
+  <depend>kinematics_interface</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>realtime_tools</depend>
+  <depend>tf2</depend>
+  <depend>tf2_eigen</depend>
+  <depend>urdf</depend>
+
+  <test_depend>kinematics_interface_kdl</test_depend>
+  <test_depend>pluginlib</test_depend>
+  <test_depend>ros2_control_test_assets</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

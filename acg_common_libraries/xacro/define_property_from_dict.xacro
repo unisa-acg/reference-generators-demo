@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="define_property_from_dict">
+  <xacro:macro name="define_property_from_dict" params="input_dict name default_value:=${None}">
+    <xacro:if value="${input_dict is None}">
+      <xacro:if value="${default_value is None}">${xacro.error('Mandatory parameter ' + name + ' not defined')}</xacro:if>
+      <xacro:unless value="${default_value is None}">
+        <xacro:property name="${name}" value="${default_value}" scope="parent"/>
+      </xacro:unless>
+    </xacro:if>
+    <xacro:unless value="${input_dict is None}">
+      <xacro:property name="is_mandatory_not_found" value="${default_value is None and not name in input_dict}"/>
+      <xacro:if value="${is_mandatory_not_found}">${xacro.error('Mandatory parameter ' + name + ' not defined')}</xacro:if>
+      <xacro:unless value="${is_mandatory_not_found}">
+        <xacro:property name="${name}" value="${input_dict.get(name, default_value)}" scope="parent"/>
+      </xacro:unless>
+    </xacro:unless>
+  </xacro:macro>
+</robot>

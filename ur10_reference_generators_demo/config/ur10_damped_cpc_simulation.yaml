@@ -1,0 +1,110 @@
+# Based on Universal_Robots_ROS2_GZ_Simulation/ur_simulation_gz/config/ur_controllers.yaml
+
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    task_space_reference_generator:
+      type: task_space_reference_generator/TaskSpaceReferenceGenerator
+
+    cartesian_pose_controller:
+      type: cartesian_pose_controller/CartesianPoseController
+
+cartesian_pose_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+    robot_name: ur10
+
+    use_twist_reference: true
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+
+    joint_space_command_controller: "none"
+    command_interfaces:
+      - position
+    command_interfaces_names_override:
+      joint_position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+
+    task_space_reference_frame: base_link
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: wrist_3_link
+
+    k_matrix_gains: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+    joint_position_tolerance: 1.0
+    joint_velocity_tolerance: 1.0
+
+    alpha: 0.005
+
+task_space_reference_generator:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    state_interfaces:
+      - position
+      - velocity
+
+    robot_name: ur10
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+      velocity:
+        - shoulder_pan_joint/velocity
+        - shoulder_lift_joint/velocity
+        - elbow_joint/velocity
+        - wrist_1_joint/velocity
+        - wrist_2_joint/velocity
+        - wrist_3_joint/velocity
+
+    task_space_command_controller: "cartesian_pose_controller"
+    task_space_command_interfaces:
+      - pose
+      - twist
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: wrist_3_link
+
+    task_space_reference_frame: base_link
+    wrench_reference_frame: wrist_3_link
+
+    publish_task_space_reference:
+      enable: true
+      frequency: 10
