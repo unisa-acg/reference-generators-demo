@@ -1,0 +1,90 @@
+# Based on Universal_Robots_ROS2_GZ_Simulation/ur_simulation_gz/config/ur_controllers.yaml
+
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_space_reference_generator:
+      type: joint_space_reference_generator/JointSpaceReferenceGenerator
+
+    pid_controller:
+      type: pid_controller/PidController
+
+pid_controller:
+  ros__parameters:
+    dof_names:
+      - fer_joint1
+      - fer_joint2
+      - fer_joint3
+      - fer_joint4
+      - fer_joint5
+      - fer_joint6
+      - fer_joint7
+
+    command_interface: effort
+
+    reference_and_state_interfaces: ["position", "velocity"]
+
+    gains:
+      fer_joint1: { p: 600., d: 30., i: 0., i_clamp_max: 1. }
+      fer_joint2: { p: 600., d: 30., i: 0., i_clamp_max: 1. }
+      fer_joint3: { p: 600., d: 30., i: 0., i_clamp_max: 1. }
+      fer_joint4: { p: 600., d: 30., i: 0., i_clamp_max: 1. }
+      fer_joint5: { p: 250., d: 10., i: 0., i_clamp_max: 1. }
+      fer_joint6: { p: 150., d: 10., i: 0., i_clamp_max: 1. }
+      fer_joint7: { p: 50., d: 5., i: 0., i_clamp_max: 1. }
+
+joint_space_reference_generator:
+  ros__parameters:
+    joints:
+      - fer_joint1
+      - fer_joint2
+      - fer_joint3
+      - fer_joint4
+      - fer_joint5
+      - fer_joint6
+      - fer_joint7
+
+    state_interfaces:
+      - position
+      - velocity
+
+    robot_name: ur10
+
+    state_interfaces_names_override:
+      position:
+        - fer_joint1/position
+        - fer_joint2/position
+        - fer_joint3/position
+        - fer_joint4/position
+        - fer_joint5/position
+        - fer_joint6/position
+        - fer_joint7/position
+      velocity:
+        - fer_joint1/velocity
+        - fer_joint2/velocity
+        - fer_joint3/velocity
+        - fer_joint4/velocity
+        - fer_joint5/velocity
+        - fer_joint6/velocity
+        - fer_joint7/velocity
+
+    joint_space_command_controller: pid_controller
+    joint_space_command_interfaces:
+      - position
+      - velocity
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: fer_link8
+
+    task_space_reference_frame: fer_link0
+    wrench_reference_frame: fer_link8
+
+    publish_task_space_reference:
+      enable: true
+      frequency: 100
