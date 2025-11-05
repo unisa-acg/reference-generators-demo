@@ -4,6 +4,34 @@ This is the accompanying code of the paper
 
 > D. Risi, V. Petrone, A. Langella, L. Petrone, E. Ferrentino, P. Chiacchio, "Simplifying ROS2 controllers with a modular architecture for robot-agnostic reference generation". Under peer-review.
 
+## Getting Started
+
+Let's start by creating and populating the colcon workspace with the `unisa_acg_ros2` package suite and its dependencies. 
+In this case we will use `wstool` for convenience, which can be installed via aptitude:
+
+```bash
+sudo apt install python3-wstool
+```
+
+After having cloned the repository `reference-generators-demo` under `src` folder, checkout to the branch named `rap`:
+
+```bash
+git checkout rap
+```
+
+To populate the workspace with the package suite and its dependencies, under your workspace's `src` folder, run:
+
+```bash
+wstool init . `reference-generators-demo/reference_generators_demo.rosinstall
+```
+
+**Note**: if a workspace config file `.rosinstall` has been already added to the workspace, update such file with the new dependencies and install them by running:
+
+```bash
+wstool merge -t . reference-generators-demo/reference_generators_demo.rosinstall
+wstool update -t .
+```
+
 ## Dependencies
 
 This code requires the installation of Ubuntu 22.04 and [ROS2 Humble Hawksbill](https://docs.ros.org/en/humble/index.html).
