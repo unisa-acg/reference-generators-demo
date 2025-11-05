@@ -107,6 +107,12 @@ bool is_nan(const geometry_msgs::msg::Twist& twist)
           std::isnan(twist.angular.y) || std::isnan(twist.angular.z));
 }
 
+bool is_nan(const geometry_msgs::msg::Wrench& wrench)
+{
+  return (std::isnan(wrench.force.x) || std::isnan(wrench.force.y) || std::isnan(wrench.force.z) || std::isnan(wrench.torque.x) ||
+          std::isnan(wrench.torque.y) || std::isnan(wrench.torque.z));
+}
+
 bool is_valid(const geometry_msgs::msg::Twist& twist)
 {
   return std::isfinite(twist.linear.x) && std::isfinite(twist.linear.y) && std::isfinite(twist.linear.z) && std::isfinite(twist.angular.x) &&

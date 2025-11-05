@@ -1,0 +1,9 @@
+<library path="multi_channel_moving_average_filter">
+  <class name="moving_average_filter/MultiChannelMovingAverageFilterDouble"
+         type="moving_average_filter::MultiChannelMovingAverageFilter&lt;double&gt;"
+	       base_class_type="filters::MultiChannelFilterBase&lt;double&gt;">
+    <description>
+	    This is a moving window average filter which works on a stream of vector of doubles.
+    </description>
+  </class>
+</library>

@@ -1,0 +1,277 @@
+# Based on Universal_Robots_ROS2_GZ_Simulation/ur_simulation_gz/config/ur_controllers.yaml
+controller_manager:
+  ros__parameters:
+    update_rate: 125  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    io_and_status_controller:
+      type: ur_controllers/GPIOController
+
+    speed_scaling_state_broadcaster:
+      type: ur_controllers/SpeedScalingStateBroadcaster
+
+    force_torque_sensor_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    scaled_joint_trajectory_controller:
+      type: ur_controllers/ScaledJointTrajectoryController
+
+    forward_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+    forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+    force_mode_controller:
+      type: ur_controllers/ForceModeController
+
+    freedrive_mode_controller:
+      type: ur_controllers/FreedriveModeController
+
+    passthrough_trajectory_controller:
+      type: ur_controllers/PassthroughTrajectoryController
+
+    tcp_pose_broadcaster:
+      type: pose_broadcaster/PoseBroadcaster
+
+    ur_configuration_controller:
+      type: ur_controllers/URConfigurationController
+
+    task_space_reference_generator:
+      type: task_space_reference_generator/TaskSpaceReferenceGenerator
+
+    cartesian_pose_controller:
+      type: cartesian_pose_controller/CartesianPoseController
+
+speed_scaling_state_broadcaster:
+  ros__parameters:
+    state_publish_rate: 100.0
+    tf_prefix: "$(var tf_prefix)"
+
+io_and_status_controller:
+  ros__parameters:
+    tf_prefix: "$(var tf_prefix)"
+
+ur_configuration_controller:
+  ros__parameters:
+    tf_prefix: "$(var tf_prefix)"
+
+force_torque_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: $(var tf_prefix)tcp_fts_sensor
+    state_interface_names:
+      - force.x
+      - force.y
+      - force.z
+      - torque.x
+      - torque.y
+      - torque.z
+    frame_id: $(var tf_prefix)tool0
+    topic_name: ft_data
+
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - $(var tf_prefix)shoulder_pan_joint
+      - $(var tf_prefix)shoulder_lift_joint
+      - $(var tf_prefix)elbow_joint
+      - $(var tf_prefix)wrist_1_joint
+      - $(var tf_prefix)wrist_2_joint
+      - $(var tf_prefix)wrist_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+      $(var tf_prefix)shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+
+
+scaled_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - $(var tf_prefix)shoulder_pan_joint
+      - $(var tf_prefix)shoulder_lift_joint
+      - $(var tf_prefix)elbow_joint
+      - $(var tf_prefix)wrist_1_joint
+      - $(var tf_prefix)wrist_2_joint
+      - $(var tf_prefix)wrist_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+      $(var tf_prefix)shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      $(var tf_prefix)wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+    speed_scaling_interface_name: $(var tf_prefix)speed_scaling/speed_scaling_factor
+
+passthrough_trajectory_controller:
+  ros__parameters:
+    tf_prefix: "$(var tf_prefix)"
+    joints:
+      - $(var tf_prefix)shoulder_pan_joint
+      - $(var tf_prefix)shoulder_lift_joint
+      - $(var tf_prefix)elbow_joint
+      - $(var tf_prefix)wrist_1_joint
+      - $(var tf_prefix)wrist_2_joint
+      - $(var tf_prefix)wrist_3_joint
+    state_interfaces:
+      - position
+      - velocity
+    speed_scaling_interface_name: $(var tf_prefix)speed_scaling/speed_scaling_factor
+
+forward_velocity_controller:
+  ros__parameters:
+    joints:
+      - $(var tf_prefix)shoulder_pan_joint
+      - $(var tf_prefix)shoulder_lift_joint
+      - $(var tf_prefix)elbow_joint
+      - $(var tf_prefix)wrist_1_joint
+      - $(var tf_prefix)wrist_2_joint
+      - $(var tf_prefix)wrist_3_joint
+    interface_name: velocity
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - $(var tf_prefix)shoulder_pan_joint
+      - $(var tf_prefix)shoulder_lift_joint
+      - $(var tf_prefix)elbow_joint
+      - $(var tf_prefix)wrist_1_joint
+      - $(var tf_prefix)wrist_2_joint
+      - $(var tf_prefix)wrist_3_joint
+
+force_mode_controller:
+  ros__parameters:
+    tf_prefix: "$(var tf_prefix)"
+
+freedrive_mode_controller:
+  ros__parameters:
+    tf_prefix: "$(var tf_prefix)"
+
+tcp_pose_broadcaster:
+  ros__parameters:
+    frame_id: $(var tf_prefix)base
+    pose_name: $(var tf_prefix)tcp_pose
+    tf:
+      child_frame_id: $(var tf_prefix)tool0_controller
+
+
+cartesian_pose_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+    robot_name: ur10
+
+    use_twist_reference: false
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+
+    joint_space_command_controller: "none"
+    command_interfaces:
+      - position
+    command_interfaces_names_override:
+      joint_position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: wrist_3_link
+      base: base_link
+
+    k_matrix_gains: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0]
+
+    joint_position_tolerance: 0.1
+    joint_velocity_tolerance: 0.1
+
+task_space_reference_generator:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    state_interfaces:
+      - position
+      - velocity
+
+    robot_name: ur10
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+      velocity:
+        - shoulder_pan_joint/velocity
+        - shoulder_lift_joint/velocity
+        - elbow_joint/velocity
+        - wrist_1_joint/velocity
+        - wrist_2_joint/velocity
+        - wrist_3_joint/velocity
+
+    task_space_command_controller: cartesian_pose_controller
+    task_space_command_interfaces:
+      - pose
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: wrist_3_link
+
+    task_space_reference_frame: base_link
+    wrench_reference_frame: wrist_3_link
+
+    publish_task_space_reference:
+      enable: true
+      frequency: 10

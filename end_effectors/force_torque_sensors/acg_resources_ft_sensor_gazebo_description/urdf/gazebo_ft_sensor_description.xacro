@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="gazebo_ft_sensor_description" params="ft_sensed_joint config">
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+
+    <xacro:define_property_from_dict input_dict="${config}" name="topic" default_value="force_torque"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="update_rate" default_value="100"/>
+
+    <!-- Force/torque sensor description used by the gazebo plugin -->
+    <gazebo reference="${ft_sensed_joint}">
+      <sensor name="force_torque_sensor" type="force_torque">
+        <always_on>true</always_on>
+        <update_rate>${update_rate}</update_rate>
+        <visualize>true</visualize>
+        <topic>${topic}</topic>
+        <force_torque>
+          <!-- Measurements are made with respect to the parent frame (F/T sensor tip) -->
+          <frame>child</frame>
+          <measure_direction>child_to_parent</measure_direction>
+        </force_torque>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

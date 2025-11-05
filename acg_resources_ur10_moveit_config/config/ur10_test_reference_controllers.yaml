@@ -1,0 +1,135 @@
+# Based on Universal_Robots_ROS2_GZ_Simulation/ur_simulation_gz/config/ur_controllers.yaml
+
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    pid_controller:
+      type: pid_controller/PidController
+
+    joint_space_reference_generator:
+      type: joint_space_reference_generator/JointSpaceReferenceGenerator
+
+forward_velocity_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+forward_position_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+pid_controller:
+  ros__parameters:
+    dof_names:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    command_interface: position
+
+    reference_and_state_interfaces: ["position", "velocity"]
+
+    gains:
+      shoulder_pan_joint: {p: 50000.0, i: 0.0, d: 125.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
+      shoulder_lift_joint: {p: 2500000.0, i: 0.0, d: 500.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
+      elbow_joint: {p: 300000.0, i: 0.0, d: 250.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
+      wrist_1_joint: {p: 25000.0, i: 0.0, d: 5.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
+      wrist_2_joint: {p: 5000.0, i: 0.0, d: 10.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
+      wrist_3_joint: {p: 1500.0, i: 0.0, d: 0.5, i_clamp_max: 0.0, i_clamp_min: 0.0}
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+      shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+
+joint_space_reference_generator:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    state_interfaces:
+      - position
+      - velocity
+
+    robot_name: ur10
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+      velocity:
+        - shoulder_pan_joint/velocity
+        - shoulder_lift_joint/velocity
+        - elbow_joint/velocity
+        - wrist_1_joint/velocity
+        - wrist_2_joint/velocity
+        - wrist_3_joint/velocity
+
+    joint_space_command_controller: pid_controller
+    joint_space_command_interfaces:
+      - position
+      - velocity
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: wrist_3_link
+
+    task_space_reference_frame: base_link
+    wrench_reference_frame: wrist_3_link
+
+    publish_task_space_reference:
+      enable: true
+      frequency: 10

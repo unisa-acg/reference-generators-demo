@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="build_end_effector">
+  <xacro:macro name="build_end_effector" params="ee_mounting_link ee_config_file enable_ft_sensing:=false sim_ignition:=false">
+    <xacro:property name="ee_config" value="${xacro.load_yaml(ee_config_file)}"/>
+    <xacro:property name="is_ee_config_valid" value="${python.isinstance(ee_config, dict)}"/>
+
+    <xacro:if value="${not is_ee_config_valid}">${xacro.error('End-effector configuration file ' + ee_config_file + ' is not a valid YAML file')}</xacro:if>
+
+    <xacro:property name="is_ft_sensor_mounting_present" value="${'ft_sensor_mounting' in ee_config}"/>
+    <xacro:property name="is_ft_sensor_present" value="${'force_torque_sensor' in ee_config}"/>
+    <xacro:property name="is_tool_mounting_present" value="${'tool_mounting' in ee_config}"/>
+    <xacro:property name="is_tool_present" value="${'tool' in ee_config}"/>
+
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${ee_config.get('force_torque_sensor', None)}" name="sensed_joint_name" default_value="ft_sensor_measure_joint"/>
+    <xacro:define_property_from_dict input_dict="${ee_config.get('force_torque_sensor', None)}" name="sensing_frame_name" default_value="ft_sensing_frame"/>
+
+    <xacro:if value="${not is_ft_sensor_mounting_present and not is_ft_sensor_present and not is_tool_mounting_present and not is_tool_present}">
+      ${xacro.error('No valid end-effector components found in end-effector configuration file ' + ee_config_file)}
+    </xacro:if>
+
+    <xacro:property name="last_link" value="${ee_mounting_link}"/>
+
+    <xacro:if value="${is_ft_sensor_mounting_present}">
+      <xacro:include filename="$(find ${ee_config.ft_sensor_mounting.description_package})/${ee_config.ft_sensor_mounting.description_file}"/>
+      <xacro:build_mounting
+        mounting_link="${last_link}"
+        name="ft_sensor_mounting"
+        config="${ee_config.ft_sensor_mounting.description_params if 'description_params' in ee_config.ft_sensor_mounting else None}"
+      />
+      <xacro:property name="last_link" value="ft_sensor_mounting"/>
+    </xacro:if>
+
+    <xacro:if value="${is_ft_sensor_present}">
+      <xacro:include filename="$(find ${ee_config.force_torque_sensor.description_package})/${ee_config.force_torque_sensor.description_file}" ns="ft_sensor"/>
+      <xacro:ft_sensor.build_force_torque_sensor
+        mounting_link="${last_link}"
+        sensed_joint_name="${sensed_joint_name}"
+        sensing_frame_name="${sensing_frame_name}"
+        config="${ee_config.force_torque_sensor.description_params if 'description_params' in ee_config.force_torque_sensor else None}"
+      />
+      <xacro:property name="last_link" value="${ft_sensor.ft_sensor_last_link}"/>
+    </xacro:if>
+
+    <xacro:if value="${is_tool_mounting_present}">
+      <xacro:include filename="$(find ${ee_config.tool_mounting.description_package})/${ee_config.tool_mounting.description_file}"/>
+      <xacro:build_mounting mounting_link="${last_link}" name="tool_mounting" config="${ee_config.tool_mounting.description_params if 'description_params' in ee_config.tool_mounting else None}"/>
+      <xacro:property name="last_link" value="tool_mounting"/>
+    </xacro:if>
+
+    <xacro:if value="${is_tool_present}">
+      <xacro:include filename="$(find ${ee_config.tool.description_package})/${ee_config.tool.description_file}"/>
+      <xacro:build_tool mounting_link="${last_link}" config="${ee_config.tool.description_params if 'description_params' in ee_config.tool else None}"/>
+    </xacro:if>
+
+    <xacro:if value="${enable_ft_sensing}">
+      <xacro:unless value="${is_ft_sensor_present}">
+        ${xacro.error('Force/torque sensing was enabled but no force/torque sensor is defined in the end-effector configuration file ' + ee_config_file)}
+      </xacro:unless>
+
+      <xacro:if value="${sim_ignition}">
+        <xacro:include filename="$(find acg_resources_ft_sensor_gazebo_description)/urdf/gazebo_ft_sensor_description.xacro"/>
+        <xacro:gazebo_ft_sensor_description config="${ee_config.force_torque_sensor.get('gazebo_params', None)}" ft_sensed_joint="${sensed_joint_name}"/>
+        <xacro:include filename="$(find acg_resources_ft_sensor_gazebo_description)/urdf/gazebo_force_torque_sensor.ros2_control.xacro"/>
+        <xacro:build_ros2_control_description config="${ee_config.force_torque_sensor.get('ros2_control_params', None)}"/>
+      </xacro:if>
+
+      <xacro:unless value="${sim_ignition}">
+        <xacro:include filename="$(find ${ee_config.force_torque_sensor.ros2_control_package})/${ee_config.force_torque_sensor.ros2_control_file}"/>
+        <xacro:build_ros2_control_description config="${ee_config.force_torque_sensor.get('ros2_control_params', None)}"/>
+      </xacro:unless>
+    </xacro:if>
+  </xacro:macro>
+</robot>

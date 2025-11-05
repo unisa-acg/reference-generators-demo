@@ -1,0 +1,9 @@
+<library path="acg_admittance_controller">
+  <class name="acg_admittance_controller/AdmittanceController"
+         type="acg_admittance_controller::AdmittanceController"
+         base_class_type="controller_interface::ChainableControllerInterface">
+    <description>
+      Admittance controller developed by the Automatic Control Group of the University of Salerno, Italy.
+    </description>
+  </class>
+</library>

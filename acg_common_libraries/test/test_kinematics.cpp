@@ -316,6 +316,186 @@ TEST_F(KinematicsTest, TestChangeWrenchFrame)
 }
 
 /**
+ * @brief Test the \c transform_wrench_frame function of the kinematics library
+ * when the actual wrench is represented by a stamped message.
+ */
+TEST_F(KinematicsTest, TestChangeWrenchMessageFrame)
+{
+  // Initialize the joint positions
+  std::vector<double> joint_positions{ 0.0, 0.0 };
+
+  // Initialize the desired wrench frame
+  std::string desired_wrench_frame{ "tool_link" };
+
+  // Initialize the wrench
+  geometry_msgs::msg::WrenchStamped wrench;
+  wrench.header.frame_id = "link2";
+  wrench.wrench.force.x = 1.0;
+  wrench.wrench.force.y = 1.0;
+  wrench.wrench.force.z = 1.0;
+  wrench.wrench.torque.x = 2.0;
+  wrench.wrench.torque.y = 2.0;
+  wrench.wrench.torque.z = 2.0;
+
+  // The link tool_link has the following orientation in the link2 frame (w,x,y,z):
+  Eigen::Quaterniond quaternion(1.0, 0.0, 0.0, 0.0);
+  quaternion.normalize();
+  Eigen::Vector3d translation(0.0, 0.0, 1);  // origin of the tool_link wrt link2 frame
+
+  Eigen::Matrix3d rotation_matrix = quaternion.toRotationMatrix();
+  rotation_matrix = rotation_matrix.transpose().eval();
+
+  translation = -rotation_matrix * translation;  // origin of the link2 wrt tool_link frame
+  Eigen::Matrix<double, 6, 1> rotated_wrench;
+  tf2::fromMsg(wrench.wrench, rotated_wrench);
+
+  // Construct the skew-symmetric matrix of the translation vector
+  Eigen::Matrix3d skew_symmetric_matrix;
+  skew_symmetric_matrix << 0.0, -translation.z(), translation.y(), translation.z(), 0.0, -translation.x(), -translation.y(), translation.x(), 0.0;
+
+  // Compute the transformed torque
+  rotated_wrench.head(3) = rotation_matrix * rotated_wrench.head(3);
+  rotated_wrench.tail(3) = (skew_symmetric_matrix * rotated_wrench.head(3)) + rotation_matrix * rotated_wrench.tail(3);
+
+  // Initialize the expected wrench
+  geometry_msgs::msg::Wrench expected_wrench;
+  tf2::toMsg(rotated_wrench, expected_wrench);
+
+  // Change the wrench frame
+  acg_kinematics::transform_wrench_frame(*kinematics_interface, joint_positions, desired_wrench_frame, wrench);
+
+  // Check the wrench
+  EXPECT_NEAR(wrench.wrench.force.x, expected_wrench.force.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.force.y, expected_wrench.force.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.force.z, expected_wrench.force.z, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.x, expected_wrench.torque.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.y, expected_wrench.torque.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.z, expected_wrench.torque.z, ABS_EPSILON);
+}
+
+/**
+ * @brief Test the \c transform_wrench_frame function of the kinematics library
+ * when the desired frame is represented by a transform
+ */
+TEST_F(KinematicsTest, TestChangeWrenchFrameFromTransform)
+{
+  // Initialize the joint positions
+  std::vector<double> joint_positions{ 0.0, 0.0 };
+
+  // Initialize the wrench
+  geometry_msgs::msg::WrenchStamped wrench;
+  wrench.header.frame_id = "link2";
+  wrench.wrench.force.x = 1.0;
+  wrench.wrench.force.y = 1.0;
+  wrench.wrench.force.z = 1.0;
+  wrench.wrench.torque.x = 2.0;
+  wrench.wrench.torque.y = 2.0;
+  wrench.wrench.torque.z = 2.0;
+
+  // The desired frame has the following orientation in the link2 frame (w,x,y,z):
+  Eigen::Quaterniond quaternion(1.0, 0.0, 0.0, 0.0);
+  quaternion.normalize();
+  Eigen::Vector3d translation(0.0, 0.0, 1);  // origin of the desired frame wrt link2 frame
+
+  geometry_msgs::msg::TransformStamped desired_frame_transform;
+  desired_frame_transform.header.frame_id = "link2";
+  tf2::toMsg(translation, desired_frame_transform.transform.translation);
+  desired_frame_transform.transform.rotation = tf2::toMsg(quaternion);
+
+  Eigen::Matrix3d rotation_matrix = quaternion.toRotationMatrix();
+  rotation_matrix = rotation_matrix.transpose().eval();
+
+  translation = -rotation_matrix * translation;  // origin of the link2 wrt desired frame
+  Eigen::Matrix<double, 6, 1> rotated_wrench;
+  tf2::fromMsg(wrench.wrench, rotated_wrench);
+
+  // Construct the skew-symmetric matrix of the translation vector
+  Eigen::Matrix3d skew_symmetric_matrix;
+  skew_symmetric_matrix << 0.0, -translation.z(), translation.y(), translation.z(), 0.0, -translation.x(), -translation.y(), translation.x(), 0.0;
+
+  // Compute the transformed torque
+  rotated_wrench.head(3) = rotation_matrix * rotated_wrench.head(3);
+  rotated_wrench.tail(3) = (skew_symmetric_matrix * rotated_wrench.head(3)) + rotation_matrix * rotated_wrench.tail(3);
+
+  // Initialize the expected wrench
+  geometry_msgs::msg::Wrench expected_wrench;
+  tf2::toMsg(rotated_wrench, expected_wrench);
+
+  // Change the wrench frame
+  acg_kinematics::transform_wrench_frame(*kinematics_interface, joint_positions, desired_frame_transform, wrench);
+
+  // Check the wrench
+  EXPECT_EQ(wrench.header.frame_id, desired_frame_transform.header.frame_id);
+  EXPECT_NEAR(wrench.wrench.force.x, expected_wrench.force.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.force.y, expected_wrench.force.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.force.z, expected_wrench.force.z, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.x, expected_wrench.torque.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.y, expected_wrench.torque.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.wrench.torque.z, expected_wrench.torque.z, ABS_EPSILON);
+}
+
+/**
+ * @brief Test the \c transform_wrench_frame function of the kinematics library
+ * when the desired frame is represented by a transform stamped message.
+ */
+TEST_F(KinematicsTest, TestChangeWrenchFrameFromTransformMessage)
+{
+  // Initialize the joint positions
+  std::vector<double> joint_positions{ 0.0, 0.0 };
+
+  // Initialize the wrench frame
+  std::string wrench_frame{ "link2" };
+
+  // Initialize the wrench
+  geometry_msgs::msg::Wrench wrench;
+  wrench.force.x = 1.0;
+  wrench.force.y = 1.0;
+  wrench.force.z = 1.0;
+  wrench.torque.x = 2.0;
+  wrench.torque.y = 2.0;
+  wrench.torque.z = 2.0;
+
+  // The desired frame has the following orientation in the link2 frame (w,x,y,z):
+  Eigen::Quaterniond quaternion(1.0, 0.0, 0.0, 0.0);
+  quaternion.normalize();
+  Eigen::Vector3d translation(0.0, 0.0, 1);  // origin of the desired frame wrt link2 frame
+
+  geometry_msgs::msg::Transform desired_frame_transform;
+  tf2::toMsg(translation, desired_frame_transform.translation);
+  desired_frame_transform.rotation = tf2::toMsg(quaternion);
+
+  Eigen::Matrix3d rotation_matrix = quaternion.toRotationMatrix();
+  rotation_matrix = rotation_matrix.transpose().eval();
+
+  translation = -rotation_matrix * translation;  // origin of the link2 wrt desired frame
+  Eigen::Matrix<double, 6, 1> rotated_wrench;
+  tf2::fromMsg(wrench, rotated_wrench);
+
+  // Construct the skew-symmetric matrix of the translation vector
+  Eigen::Matrix3d skew_symmetric_matrix;
+  skew_symmetric_matrix << 0.0, -translation.z(), translation.y(), translation.z(), 0.0, -translation.x(), -translation.y(), translation.x(), 0.0;
+
+  // Compute the transformed torque
+  rotated_wrench.head(3) = rotation_matrix * rotated_wrench.head(3);
+  rotated_wrench.tail(3) = (skew_symmetric_matrix * rotated_wrench.head(3)) + rotation_matrix * rotated_wrench.tail(3);
+
+  // Initialize the expected wrench
+  geometry_msgs::msg::Wrench expected_wrench;
+  tf2::toMsg(rotated_wrench, expected_wrench);
+
+  // Change the wrench frame
+  acg_kinematics::transform_wrench_frame(*kinematics_interface, joint_positions, desired_frame_transform, "link2", wrench_frame, wrench);
+
+  // Check the wrench
+  EXPECT_NEAR(wrench.force.x, expected_wrench.force.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.force.y, expected_wrench.force.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.force.z, expected_wrench.force.z, ABS_EPSILON);
+  EXPECT_NEAR(wrench.torque.x, expected_wrench.torque.x, ABS_EPSILON);
+  EXPECT_NEAR(wrench.torque.y, expected_wrench.torque.y, ABS_EPSILON);
+  EXPECT_NEAR(wrench.torque.z, expected_wrench.torque.z, ABS_EPSILON);
+}
+
+/**
  * @brief Test the \c transform_task_space_point_frames function of the kinematics library
  */
 TEST_F(KinematicsTest, TestSetTaskSpacePointFrame)
@@ -540,6 +720,316 @@ static ComputePoseErrorTestParams create180degZError()
 
 INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestComputePoseError, ComputePoseErrorTestSuite,
                          ::testing::Values(createEdgeCaseEqualPoses(), create180degZError()));
+
+// ****** Definitions of the test parameters and test cases for compute_twist_error ******
+
+struct ComputeTwistErrorTestParams
+{
+  geometry_msgs::msg::Twist desired_twist;
+  geometry_msgs::msg::Twist current_twist;
+  Eigen::Matrix<double, 6, 1> expected_error;
+};
+
+class ComputeTwistErrorTestSuite : public ::testing::TestWithParam<ComputeTwistErrorTestParams>
+{};
+
+/**
+ * @brief Test the \c compute_twist_error function of the kinematics utilities library
+ */
+TEST_P(ComputeTwistErrorTestSuite, ComputeTwistError)
+{
+  static constexpr double ABS_EPSILON{ 1e-6 };
+  const ComputeTwistErrorTestParams param = GetParam();
+  Eigen::Matrix<double, 6, 1> error;
+  acg_kinematics::compute_twist_error(param.desired_twist, param.current_twist, error);
+  for (Eigen::Index i = 0; i < param.expected_error.size(); ++i)
+  {
+    EXPECT_NEAR(error(i), param.expected_error(i), ABS_EPSILON) << "Error at index " << i << ": " << error(i) << " != " << param.expected_error(i);
+  }
+}
+
+static ComputeTwistErrorTestParams createEdgeCaseEqualTwists()
+{
+  ComputeTwistErrorTestParams params;
+  params.desired_twist.linear.x = 0.042641;
+  params.desired_twist.linear.y = 0.618020;
+  params.desired_twist.linear.z = 0.595680;
+  params.desired_twist.angular.x = -0.728750;
+  params.desired_twist.angular.y = 0.129740;
+  params.desired_twist.angular.z = -0.190550;
+  params.current_twist = params.desired_twist;
+  params.expected_error.setZero();
+  return params;
+}
+
+static ComputeTwistErrorTestParams create1msZError()
+{
+  ComputeTwistErrorTestParams params;
+  params.current_twist.linear.x = 1;
+  params.current_twist.linear.y = 2;
+  params.current_twist.linear.z = 2;
+  params.current_twist.angular.x = 0.1;
+  params.current_twist.angular.y = 0.2;
+  params.current_twist.angular.z = 0.3;
+
+  params.desired_twist.linear.x = 1;
+  params.desired_twist.linear.y = 2;
+  params.desired_twist.linear.z = 3;
+  params.desired_twist.angular.x = 0.1;
+  params.desired_twist.angular.y = 0.2;
+  params.desired_twist.angular.z = 0.3;
+
+  params.expected_error << 0.0, 0.0, 1.0, 0.0, 0.0, 0.0;
+  return params;
+}
+
+INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestComputeTwistError, ComputeTwistErrorTestSuite,
+                         ::testing::Values(createEdgeCaseEqualTwists(), create1msZError()));
+
+// ****** Definitions of the test parameters and test cases for compute_wrench_error ******
+
+struct ComputeWrenchErrorTestParams
+{
+  geometry_msgs::msg::Wrench desired_wrench;
+  geometry_msgs::msg::Wrench current_wrench;
+  Eigen::Matrix<double, 6, 1> expected_error;
+};
+
+class ComputeWrenchErrorTestSuite : public ::testing::TestWithParam<ComputeWrenchErrorTestParams>
+{};
+
+/**
+ * @brief Test the \c compute_wrench_error function of the kinematics utilities library
+ */
+TEST_P(ComputeWrenchErrorTestSuite, ComputeWrenchError)
+{
+  static constexpr double ABS_EPSILON{ 1e-6 };
+  const ComputeWrenchErrorTestParams param = GetParam();
+  Eigen::Matrix<double, 6, 1> error;
+  acg_kinematics::compute_wrench_error(param.desired_wrench, param.current_wrench, error);
+  for (Eigen::Index i = 0; i < param.expected_error.size(); ++i)
+  {
+    EXPECT_NEAR(error(i), param.expected_error(i), ABS_EPSILON) << "Error at index " << i << ": " << error(i) << " != " << param.expected_error(i);
+  }
+}
+
+// Example test cases
+
+static ComputeWrenchErrorTestParams createEdgeCaseEqualWrenches()
+{
+  ComputeWrenchErrorTestParams params;
+  params.desired_wrench.force.x = 10.0;
+  params.desired_wrench.force.y = -5.0;
+  params.desired_wrench.force.z = 2.5;
+  params.desired_wrench.torque.x = 0.1;
+  params.desired_wrench.torque.y = -0.2;
+  params.desired_wrench.torque.z = 0.3;
+
+  params.current_wrench = params.desired_wrench;
+  params.expected_error.setZero();
+  return params;
+}
+
+static ComputeWrenchErrorTestParams create1NZError()
+{
+  ComputeWrenchErrorTestParams params;
+  params.current_wrench.force.x = 1.0;
+  params.current_wrench.force.y = 2.0;
+  params.current_wrench.force.z = 2.0;
+  params.current_wrench.torque.x = 0.1;
+  params.current_wrench.torque.y = 0.2;
+  params.current_wrench.torque.z = 0.3;
+
+  params.desired_wrench.force.x = 1.0;
+  params.desired_wrench.force.y = 2.0;
+  params.desired_wrench.force.z = 3.0;
+  params.desired_wrench.torque.x = 0.1;
+  params.desired_wrench.torque.y = 0.2;
+  params.desired_wrench.torque.z = 0.3;
+
+  params.expected_error << 0.0, 0.0, 1.0, 0.0, 0.0, 0.0;
+  return params;
+}
+
+// Instantiate the tests
+INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestComputeWrenchError, ComputeWrenchErrorTestSuite,
+                         ::testing::Values(createEdgeCaseEqualWrenches(), create1NZError()));
+
+// ****** Definitions of the test parameters and test cases for compute_euclidean_distance ******
+
+struct ComputeEuclideanDistanceTestParams
+{
+  geometry_msgs::msg::Point point1;
+  geometry_msgs::msg::Point point2;
+  double expected_distance;
+};
+
+class ComputeEuclideanDistanceTestSuite : public ::testing::TestWithParam<ComputeEuclideanDistanceTestParams>
+{};
+
+/**
+ * @brief Test the \c compute_euclidean_distance function of the kinematics utilities library
+ */
+TEST_P(ComputeEuclideanDistanceTestSuite, ComputeEuclideanDistance)
+{
+  static constexpr double ABS_EPSILON{ 1e-6 };
+  const ComputeEuclideanDistanceTestParams param = GetParam();
+  double distance = acg_kinematics::compute_euclidean_distance(param.point1, param.point2);
+  EXPECT_NEAR(distance, param.expected_distance, ABS_EPSILON);
+}
+
+static ComputeEuclideanDistanceTestParams createEdgeCaseEqualPoints()
+{
+  ComputeEuclideanDistanceTestParams params;
+  params.point1.x = 0.042641;
+  params.point1.y = 0.618020;
+  params.point1.z = 0.595680;
+  params.point2 = params.point1;
+  params.expected_distance = 0.0;
+  return params;
+}
+
+static ComputeEuclideanDistanceTestParams create1mZError()
+{
+  ComputeEuclideanDistanceTestParams params;
+  params.point1.x = 1;
+  params.point1.y = 2;
+  params.point1.z = 3;
+
+  params.point2.x = 1;
+  params.point2.y = 2;
+  params.point2.z = 2;
+
+  params.expected_distance = 1.0;
+  return params;
+}
+
+INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestComputeEuclideanDistance, ComputeEuclideanDistanceTestSuite,
+                         ::testing::Values(createEdgeCaseEqualPoints(), create1mZError()));
+
+// ****** Definitions of the test parameters and test cases for compute_angular_distance ******
+
+struct ComputeAngularDistanceTestParams
+{
+  geometry_msgs::msg::Quaternion quat1;
+  geometry_msgs::msg::Quaternion quat2;
+  double expected_distance;
+};
+
+class ComputeAngularDistanceTestSuite : public ::testing::TestWithParam<ComputeAngularDistanceTestParams>
+{};
+
+/**
+ * @brief Test the \c compute_angular_distance function of the kinematics utilities library
+ */
+TEST_P(ComputeAngularDistanceTestSuite, ComputeAngularDistance)
+{
+  static constexpr double ABS_EPSILON{ 1e-6 };
+  const ComputeAngularDistanceTestParams param = GetParam();
+  double distance = acg_kinematics::compute_angular_distance(param.quat1, param.quat2);
+  EXPECT_NEAR(distance, param.expected_distance, ABS_EPSILON);
+}
+
+static ComputeAngularDistanceTestParams createEdgeCaseEqualQuaternions()
+{
+  ComputeAngularDistanceTestParams params;
+  params.quat1.x = 0.0;
+  params.quat1.y = 0.0;
+  params.quat1.z = 0.0;
+  params.quat1.w = 1.0;
+  params.quat2 = params.quat1;
+  params.expected_distance = 0.0;
+  return params;
+}
+
+static ComputeAngularDistanceTestParams create180degZDistance()
+{
+  ComputeAngularDistanceTestParams params;
+  params.quat1.x = 0.0;
+  params.quat1.y = 0.0;
+  params.quat1.z = 0.0;
+  params.quat1.w = 1.0;
+
+  params.quat2.x = 0.0;
+  params.quat2.y = 0.0;
+  params.quat2.z = 1.0;
+  params.quat2.w = 0.0;
+
+  params.expected_distance = M_PI;
+  return params;
+}
+
+INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestComputeAngularDistance, ComputeAngularDistanceTestSuite,
+                         ::testing::Values(createEdgeCaseEqualQuaternions(), create180degZDistance()));
+
+// ****** Definitions of the test parameters and test cases for is_pose_close ******
+
+struct IsPoseCloseTestParams
+{
+  geometry_msgs::msg::Pose pose1;
+  geometry_msgs::msg::Pose pose2;
+  double position_tolerance;
+  double orientation_tolerance;
+  bool expected_result;
+};
+
+class IsPoseCloseTestSuite : public ::testing::TestWithParam<IsPoseCloseTestParams>
+{};
+
+/**
+ * @brief Test the \c is_pose_close function of the kinematics utilities library
+ */
+TEST_P(IsPoseCloseTestSuite, IsPoseClose)
+{
+  const IsPoseCloseTestParams param = GetParam();
+  bool result = acg_kinematics::is_pose_close(param.pose1, param.pose2, param.position_tolerance, param.orientation_tolerance);
+  EXPECT_EQ(result, param.expected_result);
+}
+
+static IsPoseCloseTestParams createEdgeCaseZeroDistance()
+{
+  IsPoseCloseTestParams params;
+  params.pose1.position.x = 1.0;
+  params.pose1.position.y = 2.0;
+  params.pose1.position.z = 3.0;
+  params.pose1.orientation.x = 0.0;
+  params.pose1.orientation.y = 0.0;
+  params.pose1.orientation.z = 0.0;
+  params.pose1.orientation.w = 1.0;
+  params.pose2 = params.pose1;
+  params.position_tolerance = 1e-6;
+  params.orientation_tolerance = 1e-6;
+  params.expected_result = true;
+  return params;
+}
+
+static IsPoseCloseTestParams create1m180degZPoseDistance()
+{
+  IsPoseCloseTestParams params;
+  params.pose1.position.x = 1.0;
+  params.pose1.position.y = 2.0;
+  params.pose1.position.z = 3.0;
+  params.pose1.orientation.x = 0.0;
+  params.pose1.orientation.y = 0.0;
+  params.pose1.orientation.z = 0.0;
+  params.pose1.orientation.w = 1.0;
+
+  params.pose2.position.x = 1.0;
+  params.pose2.position.y = 1.0;
+  params.pose2.position.z = 2.0;
+  params.pose2.orientation.x = 0.0;
+  params.pose2.orientation.y = 0.0;
+  params.pose2.orientation.z = 1.0;
+  params.pose2.orientation.w = 0.0;
+
+  params.position_tolerance = 1e-6;
+  params.orientation_tolerance = 1e-6;
+  params.expected_result = false;
+  return params;
+}
+
+INSTANTIATE_TEST_SUITE_P(KinematicsUtilitiesTestIsPoseClose, IsPoseCloseTestSuite,
+                         ::testing::Values(createEdgeCaseZeroDistance(), create1m180degZPoseDistance()));
 
 int main(int argc, char** argv)
 {

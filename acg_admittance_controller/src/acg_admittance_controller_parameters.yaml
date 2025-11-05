@@ -1,0 +1,30 @@
+acg_admittance_controller:
+  force_limitation_enabled: {
+    type: bool,
+    default_value: false,
+    description: "Specifies whether the force limitation is enabled or not."
+  }
+  reference_scaling_gain: {
+    type: double,
+    description: "Specifies the scaling gain for the position reference.",
+    validation: {
+      bounds<>: [ 0.0, 1.0 ]
+    }
+  }
+  filter_chain_scaling: {
+    type: none,
+    description: "The filter chain to filter interaction forces used for reference scaling.",
+  }
+  logging_enabled: {
+    type: bool,
+    default_value: false,
+    description: "Specifies whether logging is enabled or not."
+  }
+  state_publish_frequency: {
+    type: double,
+    default_value: 125.0,
+    description: "The frequency (in Hz) at which the controller state is published.",
+    validation: {
+      gt_eq<>: 0.0
+    }
+  }

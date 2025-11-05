@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  This file is the URDF description of a UR10 robot which can optionally mount an end-effector on the tool0 link.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur10_with_end_effector">
+  <xacro:arg name="ee_config_file" default=""/>
+  <xacro:arg name="sim_ignition" default="false"/>
+  <xacro:arg name="enable_ft_sensing" default="false"/>
+
+  <!-- Import UR10 urdf file -->
+  <xacro:include filename="$(find acg_resources_ur10_description)/urdf/ur10.urdf.xacro"/>
+
+  <!-- Build the end-effector -->
+  <xacro:unless value="$(eval ee_config_file == '')">
+    <xacro:include filename="$(find end_effector_builder)/urdf/build_end_effector.xacro"/>
+    <xacro:build_end_effector ee_mounting_link="tool0" ee_config_file="$(arg ee_config_file)" enable_ft_sensing="$(arg enable_ft_sensing)" sim_ignition="$(arg sim_ignition)"/>
+  </xacro:unless>
+</robot>

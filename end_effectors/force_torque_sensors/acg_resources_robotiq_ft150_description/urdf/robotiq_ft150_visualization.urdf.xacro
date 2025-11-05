@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="short_handle">
+  <link name="world"/>
+
+  <xacro:include filename="$(find acg_resources_robotiq_ft150_description)/urdf/robotiq_ft150.urdf.xacro"/>
+  <xacro:build_force_torque_sensor mounting_link="world" config="${dict()}"/>
+</robot>

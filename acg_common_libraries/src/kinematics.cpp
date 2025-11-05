@@ -13,6 +13,8 @@
  * -------------------------------------------------------------------
  */
 
+#include <tf2_eigen/tf2_eigen.hpp>
+
 #include "acg_common_libraries/message_utilities.hpp"
 #include "acg_common_libraries/kinematics.hpp"
 
@@ -189,16 +191,63 @@ void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematic
   tf2::toMsg(wrench_eigen, wrench);
 }
 
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const std::string& desired_wrench_frame, geometry_msgs::msg::WrenchStamped& wrench)
+{
+  if (wrench.header.frame_id.empty())
+  {
+    throw std::runtime_error("`wrench.header.frame_id` must be non-empty.");
+  }
+  transform_wrench_frame(kinematics, joint_positions, desired_wrench_frame, wrench.header.frame_id, wrench.wrench);
+  wrench.header.frame_id = desired_wrench_frame;
+}
+
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const geometry_msgs::msg::Transform& desired_transform, const std::string& motion_frame, const std::string& wrench_frame,
+                            geometry_msgs::msg::Wrench& wrench)
+{
+  // Convert the wrench to the motion frame
+  transform_wrench_frame(kinematics, joint_positions, motion_frame, wrench_frame, wrench);
+
+  // Convert the wrench from the motion to the desired frame
+  Eigen::Isometry3d motion_to_desired_transform = tf2::transformToEigen(desired_transform);
+  Eigen::Isometry3d desired_to_motion_transform = motion_to_desired_transform.inverse();
+
+  Eigen::Vector3d force, torque;
+  tf2::fromMsg(wrench.force, force);
+  tf2::fromMsg(wrench.torque, torque);
+
+  // Compute the transformed force
+  Eigen::Vector3d rotated_force = desired_to_motion_transform.rotation() * force;
+
+  // Compute the transformed torque
+  Eigen::Vector3d translation = desired_to_motion_transform.translation();
+  Eigen::Matrix3d skew_symmetric_matrix;
+  skew_symmetric_matrix << 0.0, -translation.z(), translation.y(), translation.z(), 0.0, -translation.x(), -translation.y(), translation.x(), 0.0;
+
+  Eigen::Vector3d rotated_torque = desired_to_motion_transform.rotation() * torque + skew_symmetric_matrix * rotated_force;
+
+  tf2::toMsg(rotated_force, wrench.force);
+  tf2::toMsg(rotated_torque, wrench.torque);
+}
+
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const geometry_msgs::msg::TransformStamped& desired_transform, geometry_msgs::msg::WrenchStamped& wrench)
+{
+  if (wrench.header.frame_id.empty())
+  {
+    throw std::runtime_error("`wrench.header.frame_id` must be non-empty.");
+  }
+  transform_wrench_frame(kinematics, joint_positions, desired_transform.transform, desired_transform.header.frame_id, wrench.header.frame_id,
+                         wrench.wrench);
+  wrench.header.frame_id = desired_transform.header.frame_id;
+}
+
 void compute_pose_error(const geometry_msgs::msg::Pose& desired_pose, const geometry_msgs::msg::Pose& current_pose,
                         Eigen::Matrix<double, 6, 1>& error)
 {
-  Eigen::Vector3d desired_position;
-  Eigen::Vector3d current_position;
-  Eigen::Vector3d position_error;
-  Eigen::Quaterniond desired_quaternion;
-  Eigen::Quaterniond current_quaternion;
-  Eigen::Quaterniond error_quaternion;
-  Eigen::Vector3d orientation_error;
+  Eigen::Vector3d desired_position, current_position;
+  Eigen::Quaterniond desired_quaternion, current_quaternion;
 
   tf2::fromMsg(current_pose.position, current_position);
   tf2::fromMsg(current_pose.orientation, current_quaternion);
@@ -206,17 +255,61 @@ void compute_pose_error(const geometry_msgs::msg::Pose& desired_pose, const geom
   tf2::fromMsg(desired_pose.orientation, desired_quaternion);
 
   // Compute the position error
-  position_error = desired_position - current_position;
+  Eigen::Vector3d position_error = desired_position - current_position;
 
   // Compute the orientation error
-  error_quaternion = desired_quaternion * current_quaternion.inverse();
-
+  Eigen::Quaterniond error_quaternion = desired_quaternion * current_quaternion.inverse();
   Eigen::AngleAxisd error_angle_axis(error_quaternion);
-  orientation_error = error_angle_axis.axis() * error_angle_axis.angle();
+  Eigen::Vector3d orientation_error = error_angle_axis.axis() * error_angle_axis.angle();
 
   // Set the error vector
-  error.head(3) << position_error.x(), position_error.y(), position_error.z();
-  error.tail(3) << orientation_error.x(), orientation_error.y(), orientation_error.z();
+  error.head(3) << position_error;
+  error.tail(3) << orientation_error;
+}
+
+void compute_twist_error(const geometry_msgs::msg::Twist& desired_twist, const geometry_msgs::msg::Twist& current_twist,
+                         Eigen::Matrix<double, 6, 1>& error)
+{
+  // Compute the twist error: the error is defined as the difference between the desired and current twist
+  error.head(3) << desired_twist.linear.x - current_twist.linear.x, desired_twist.linear.y - current_twist.linear.y,
+      desired_twist.linear.z - current_twist.linear.z;
+  error.tail(3) << desired_twist.angular.x - current_twist.angular.x, desired_twist.angular.y - current_twist.angular.y,
+      desired_twist.angular.z - current_twist.angular.z;
+}
+
+void compute_wrench_error(const geometry_msgs::msg::Wrench& desired_wrench, const geometry_msgs::msg::Wrench& current_wrench,
+                          Eigen::Matrix<double, 6, 1>& error)
+{
+  // Compute the wrench error: the error is defined as the difference between the desired and current wrench
+  error.head(3) << desired_wrench.force.x - current_wrench.force.x, desired_wrench.force.y - current_wrench.force.y,
+      desired_wrench.force.z - current_wrench.force.z;
+  error.tail(3) << desired_wrench.torque.x - current_wrench.torque.x, desired_wrench.torque.y - current_wrench.torque.y,
+      desired_wrench.torque.z - current_wrench.torque.z;
+}
+
+double compute_euclidean_distance(const geometry_msgs::msg::Point& point1, const geometry_msgs::msg::Point& point2)
+{
+  Eigen::Vector3d p1, p2;
+  tf2::fromMsg(point1, p1);
+  tf2::fromMsg(point2, p2);
+  return (p1 - p2).norm();
+}
+
+double compute_angular_distance(const geometry_msgs::msg::Quaternion& quat1, const geometry_msgs::msg::Quaternion& quat2)
+{
+  Eigen::Quaterniond q1, q2;
+  tf2::fromMsg(quat1, q1);
+  tf2::fromMsg(quat2, q2);
+  return q1.angularDistance(q2);
+}
+
+bool is_pose_close(const geometry_msgs::msg::Pose& pose1, const geometry_msgs::msg::Pose& pose2, const double translational_tolerance,
+                   const double rotational_tolerance)
+{
+  double translation_distance = compute_euclidean_distance(pose1.position, pose2.position);
+  double rotation_distance = compute_angular_distance(pose1.orientation, pose2.orientation);
+
+  return translation_distance < translational_tolerance && rotation_distance < rotational_tolerance;
 }
 
 }  // namespace acg_kinematics

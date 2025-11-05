@@ -1,0 +1,50 @@
+task_space_trajectory:
+    header:
+      stamp: {sec: 0, nanosec: 0}
+      frame_id: 'base_link'
+    points:
+      - point:
+          motion_frame: 'base_link'
+          pose:
+            position: {x: -0.1, y: 0.8, z: 0.2}
+            orientation: {w: 0.0, x: 0.0, y: 0.7071068, z: 0.7071068}
+          twist:
+            linear: {x: 0.0, y: 0.0, z: 0.0}
+            angular: {x: 0.0, y: 0.0, z: 0.0}
+        time_from_start: {sec: 5, nanosec: 0}
+      - point:
+          motion_frame: 'base_link'
+          pose:
+            position: {x: -0.1, y: 0.8, z: 0.7}
+            orientation: {w: 0.0, x: 0.0, y: 0.7071068, z: 0.7071068}
+          twist:
+            linear: {x: 0.0, y: 0.0, z: 0.0}
+            angular: {x: 0.0, y: 0.0, z: 0.0}
+        time_from_start: {sec: 20, nanosec: 0}
+      - point:
+          motion_frame: 'base_link'
+          pose:
+            position: {x: 0.4, y: 0.8, z: 0.7}
+            orientation: {w: 0.0, x: 0.0, y: 1.0, z: 0.0}
+          twist:
+            linear: {x: 0.0, y: 0.0, z: 0.0}
+            angular: {x: 0.0, y: 0.0, z: 0.0}
+        time_from_start: {sec: 35, nanosec: 0}
+      - point:
+          motion_frame: 'base_link'
+          pose:
+            position: {x: 0.4, y: 0.8, z: 0.2}
+            orientation: {w: 0.0, x: 0.0, y: 1.0, z: 0.0}
+          twist:
+            linear: {x: 0.0, y: 0.0, z: 0.0}
+            angular: {x: 0.0, y: 0.0, z: 0.0}
+        time_from_start: {sec: 50, nanosec: 0}
+      - point:
+          motion_frame: 'base_link'
+          pose:
+            position: {x: -0.1, y: 0.8, z: 0.2}
+            orientation: {w: 0.0, x: 0.0, y: 0.7071068, z: 0.7071068}
+          twist:
+            linear: {x: 0.0, y: 0.0, z: 0.0}
+            angular: {x: 0.0, y: 0.0, z: 0.0}
+        time_from_start: {sec: 65, nanosec: 0}

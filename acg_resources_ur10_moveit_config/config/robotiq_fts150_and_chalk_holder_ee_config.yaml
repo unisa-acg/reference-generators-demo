@@ -1,0 +1,31 @@
+ft_sensor_mounting:
+  description_package: "acg_resources_generic_mounting_description"
+  description_file: "urdf/generic_mounting.urdf.xacro"
+  description_params:
+    height: 0.01
+    radius: 0.05
+    mass: 0.05
+
+force_torque_sensor:
+  description_package: "acg_resources_robotiq_ft150_description"
+  description_file: "urdf/robotiq_ft150.urdf.xacro"
+  ros2_control_package: "acg_resources_robotiq_ft150_description"
+  ros2_control_file: "urdf/robotiq_ft150.ros2_control.xacro"
+  ros2_control_params:
+    max_retries: 1
+    read_rate: 10
+    use_fake_mode: false
+    number_of_samples_for_computing_bias: 10
+    stable_readings_tolerance: 1e-2
+  gazebo_params:
+    topic: "force_torque"
+    update_rate: 100
+
+tool:
+  description_package: "acg_resources_chalk_holder_description"
+  description_file: "urdf/chalk_holder.urdf.xacro"
+
+ignored_collision_links:
+  - "wrist_1_link"
+  - "wrist_2_link"
+  - "wrist_3_link"

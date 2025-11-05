@@ -1,0 +1,368 @@
+motion_based_interaction_controller:
+  robot_name: {
+    type: string,
+    description: "Specifies the name of the robot.",
+    read_only: true,
+    validation: {
+      not_empty<>: null,
+    }
+  }
+  joints: {
+    type: string_array,
+    description: "Specifies which joints will be used by the controller.",
+    read_only: true,
+    validation: {
+      not_empty<>: null,
+    }
+  }
+  force_torque_sensor:
+    name: {
+        type: string,
+        description: "Specifies the name of the force/torque sensor providing measurements.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+    measure_frame: {
+        type: string,
+        description: "Specifies the name of the frame in which the force/torque measures are expressed.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+  state_interfaces_names_override:
+    position: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<robot_name>/<joint_name>/position) for the joint position state interface.",
+      default_value: [],
+      read_only: true
+    }
+    velocity: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<robot_name>/<joint_name>/velocity) for the joint velocity state interface.",
+      default_value: [],
+      read_only: true
+    }
+  ft_sensor_state_interfaces_names_override: {
+    type: string_array,
+    description: "If this parameter is set, it will override the default names (<sensor_name>/[force/torque].[x/y/z]) for the force/torque sensor state interfaces.",
+    default_value: [],
+    read_only: true
+  }
+  command_interfaces: {
+    type: string_array,
+    description: "Specifies the interfaces that will be used to send commands.",
+    default_value: ["pose"],
+    read_only: true,
+    validation: {
+      subset_of<>: [["pose", "twist"]],
+      unique<>: null,
+    }
+  }
+  command_interfaces_names_override:
+    pose: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<downstream_controller_name/[position/orientation].[x/y/z/w]) for the pose command interfaces.",
+      default_value: [],
+      read_only: true
+    }
+    twist: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<downstream_controller_name/[linear_velocity/angular_velocity].[x/y/z]) for the twist command interfaces.",
+      default_value: [],
+      read_only: true
+    }
+  reference_interfaces: {
+    type: string_array,
+    description: "Specifies the interfaces that will be used to receive references.",
+    default_value: ["pose"],
+    read_only: true,
+    validation: {
+      subset_of<>: [["pose", "twist", "wrench"]],
+      unique<>: null,
+    }
+  }
+  reference_interfaces_names_override:
+    pose: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<controller_name>/[position/orientation].[x/y/z/w]) for the pose reference interfaces.",
+      default_value: [],
+      read_only: true
+    }
+    twist: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<controller_name/[linear_velocity/angular_velocity]/[x/y/z]) for the twist reference interfaces.",
+      default_value: [],
+      read_only: true
+    }
+    wrench: {
+      type: string_array,
+      description: "If this parameter is set, it will override the default names (<controller_name/[force/torque].[x/y/z]) for the wrench reference interfaces.",
+      default_value: [],
+      read_only: true
+    }
+  kinematics:
+    plugin_name: {
+        type: string,
+        description: "Specifies the name of the kinematics plugin to load.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+    plugin_package: {
+        type: string,
+        description: "Specifies the package name that contains the kinematics plugin.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+    tip: {
+        type: string,
+        description: "Specifies the end effector link of the robot description used by the kinematics plugin.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+  task_space_reference_frame: {
+      type: string,
+      description: "Specifies the reference frame for the task space.",
+      read_only: true,
+      validation: {
+        not_empty<>: null,
+      }
+    }
+  interaction_filter:
+    type: {
+        type: string,
+        description: "Specifies the name of the interaction filter plugin to load.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+    name: {
+        type: string,
+        description: "Specifies the name of the interaction filter.",
+        read_only: true,
+        validation: {
+          not_empty<>: null,
+        }
+      }
+  wrench_reference_frame: {
+      type: string,
+      description: "Specifies the reference frame for the wrench.",
+      read_only: true,
+      validation: {
+        not_empty<>: null,
+      }
+    }
+  task_space_command_controller: {
+      type: string,
+      description: "Specifies the controller that will receive the task space commands.",
+      read_only: true,
+      validation: {
+        not_empty<>: null,
+      }
+    }
+  fixed_robot_orientation: {
+    type: bool,
+    description: "If enabled, the controller will be able to work only with fixed orientation.",
+    default_value: false,
+    read_only: true,
+  }
+  command_tolerance:
+    translational_tolerance: {
+        type: double,
+        description: "Specifies the translational tolerance for the command in meters.",
+        default_value: 0.01,
+        read_only: true,
+        validation: {
+          gt_eq<>: 0.0
+        }
+      }
+    rotational_tolerance: {
+        type: double,
+        description: "Specifies the rotational tolerance for the command in radians.",
+        default_value: 0.01,
+        read_only: true,
+        validation: {
+          gt_eq<>: 0.0
+        }
+      }
+  filter_chain:
+    fixed_orientation:
+        filter1:
+          name: {
+            type: string,
+            description: "Specifies the name of the first filter in the filter chain for fixed orientation.",
+            default_value: "unbiasing_filter",
+            read_only: true,
+            validation: {
+              one_of<>: [["unbiasing_filter"]]
+            }
+          }
+          type: {
+            type: string,
+            description: "Specifies the type of the first filter in the filter chain for fixed orientation.",
+            default_value: "unbiasing_filter/UnbiasingFilterDouble",
+            read_only: true,
+            validation: {
+              one_of<>: [["unbiasing_filter/UnbiasingFilterDouble"]]
+            }
+          }
+          params:
+            number_of_stable_samples_for_bias: {
+              type: int,
+              description: "Specifies the number of stable samples required to compute the bias.",
+              default_value: 10,
+              read_only: true,
+              validation: {
+                gt_eq<>: 0
+              }
+            }
+            tolerance: {
+              type: double,
+              description: "Specifies the tolerance to consider a sample as stable.",
+              default_value: 0.5,
+              read_only: true,
+              validation: {
+                gt_eq<>: 0.0
+              }
+            }
+        filter2:
+          name: {
+            type: string,
+            description: "Specifies the name of the second filter in the filter chain for fixed orientation.",
+            default_value: "multi_channel_moving_average_filter",
+            read_only: true,
+            validation: {
+              one_of<>: [["multi_channel_moving_average_filter"]]
+            }
+          }
+          type: {
+            type: string,
+            description: "Specifies the type of the second filter in the filter chain for fixed orientation.",
+            default_value: "moving_average_filter/MultiChannelMovingAverageFilterDouble",
+            read_only: true,
+            validation: {
+              one_of<>: [["moving_average_filter/MultiChannelMovingAverageFilterDouble"]]
+            }
+          }
+          params:
+            number_of_observations: {
+              type: int,
+              description: "Specifies the number of observations for the moving average filter.",
+              default_value: 15,
+              read_only: true,
+              validation: {
+                gt_eq<>: 1
+              }
+            }
+    variable_orientation:
+      filter1:
+        name: {
+          type: string,
+          description: "Specifies the name of the first filter in the filter chain for variable orientation.",
+          default_value: "gravity_compensation_filter",
+          read_only: true,
+          validation: {
+            one_of<>: [["gravity_compensation_filter"]]
+          }
+        }
+        type: {
+          type: string,
+          description: "Specifies the type of the first filter in the filter chain for variable orientation.",
+          default_value: "gravity_compensation_filter/GravityCompensationFilterDouble",
+          read_only: true,
+          validation: {
+            one_of<>: [["gravity_compensation_filter/GravityCompensationFilterDouble"]]
+          }
+        }
+        params:
+          ft_sensing_frame_name: {
+            type: string,
+            description: "Specifies the name of the frame in which the force/torque measures are expressed.",
+            default_value: "ft_sensing_frame",
+            read_only: true,
+          }
+          gravity: {
+            type: double_array,
+            description: "Specifies the gravity vector.",
+            default_value: [0.0, 0.0, -9.81],
+            read_only: true,
+            validation: {
+              fixed_size<>: 3
+            }
+          }
+      filter2:
+        name: {
+          type: string,
+          description: "Specifies the name of the second filter in the filter chain for variable orientation.",
+          default_value: "unbiasing_filter",
+          read_only: true,
+          validation: {
+            one_of<>: [["unbiasing_filter"]]
+          }
+        }
+        type: {
+          type: string,
+          description: "Specifies the type of the second filter in the filter chain for variable orientation.",
+          default_value: "unbiasing_filter/UnbiasingFilterDouble",
+          read_only: true,
+          validation: {
+            one_of<>: [["unbiasing_filter/UnbiasingFilterDouble"]]
+          }
+        }
+        params:
+          number_of_stable_samples_for_bias: {
+            type: int,
+            description: "Specifies the number of stable samples required to compute the bias.",
+            default_value: 50,
+            read_only: true,
+            validation: {
+              gt_eq<>: 0
+            }
+          }
+          tolerance: {
+            type: double,
+            description: "Specifies the tolerance to consider a sample as stable.",
+            default_value: 2.0,
+            read_only: true,
+            validation: {
+              gt_eq<>: 0.0
+            }
+          }
+      filter3:
+        name: {
+          type: string,
+          description: "Specifies the name of the third filter in the filter chain for variable orientation.",
+          default_value: "multi_channel_moving_average_filter",
+          read_only: true,
+          validation: {
+            one_of<>: [["multi_channel_moving_average_filter"]]
+          }
+        }
+        type: {
+          type: string,
+          description: "Specifies the type of the third filter in the filter chain for variable orientation.",
+          default_value: "moving_average_filter/MultiChannelMovingAverageFilterDouble",
+          read_only: true,
+          validation: {
+            one_of<>: [["moving_average_filter/MultiChannelMovingAverageFilterDouble"]]
+          }
+        }
+        params:
+          number_of_observations: {
+            type: int,
+            description: "Specifies the number of observations for the moving average filter.",
+            default_value: 15,
+            read_only: true,
+            validation: {
+              gt_eq<>: 1
+            }
+          }

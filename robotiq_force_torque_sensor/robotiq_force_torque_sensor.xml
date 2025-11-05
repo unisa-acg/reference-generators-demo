@@ -1,0 +1,9 @@
+<library path="robotiq_force_torque_sensor">
+    <class name="robotiq_force_torque_sensor/RobotiqFTSensor"
+           type="robotiq_force_torque_sensor::RobotiqFTSensor"
+           base_class_type="hardware_interface::SensorInterface">
+        <description>
+      This is a Robotiq force/torque sensor wrapper.
+    </description>
+    </class>
+</library>

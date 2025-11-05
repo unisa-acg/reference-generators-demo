@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="chalk_holder">
+  <xacro:property name="name" value="chalk_holder"/>
+
+  <xacro:macro name="build_tool" params="mounting_link mounting_to_tool_joint:='' config sim_ignition:=^|false">
+    <xacro:if value="${mounting_to_tool_joint == ''}">
+      <xacro:property name="mounting_to_tool_joint" value="${mounting_link + '_to_' + name}"/>
+    </xacro:if>
+
+    <xacro:property name="mass" value="0.049"/>
+    <xacro:property name="height" value="0.043"/>
+    <xacro:property name="com_z_offset" value="1.08438e-2"/>
+
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="rpy" default_value="0 0 0"/>
+
+    <material name="${name}_material_red">
+      <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+
+    <!-- Chalk holder -->
+
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 ${-height + com_z_offset}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="1.68343e-13" ixy="0" ixz="0" iyy="1.68354e-13" iyz="0" izz="2.56804e-13"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${-height}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find acg_resources_chalk_holder_description)/meshes/visual/${name}.dae"/>
+        </geometry>
+        <material name="${name}_material_red"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${-height}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find acg_resources_chalk_holder_description)/meshes/collision/${name}.stl"/>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <solver>
+                <type>world</type>
+              </solver>
+              <kp>1e15</kp>
+              <kd>1e13</kd>
+              <min_depth>0.0001</min_depth>
+              <max_vel>0.1</max_vel>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${name}">
+        <gravity>true</gravity>
+      </gazebo>
+    </xacro:if>
+
+    <!-- Fixed joint to connect the chalk holder tip with the previous link. -->
+
+    <joint name="${mounting_to_tool_joint}" type="fixed">
+      <origin xyz="0 0 ${height}" rpy="${rpy}"/>
+      <parent link="${mounting_link}"/>
+      <child link="${name}"/>
+    </joint>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${mounting_to_tool_joint}">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+      </gazebo>
+    </xacro:if>
+  </xacro:macro>
+</robot>

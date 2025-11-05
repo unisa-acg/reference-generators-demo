@@ -1,0 +1,7 @@
+<library path="admittance_filter">
+  <class base_class_type="interaction_filters::InteractionFilterBase"
+         type="interaction_filters::AdmittanceFilter"
+         name="interaction_filters/AdmittanceFilter">
+    <description>This is a plugin implementing an admittance filter.</description>
+  </class>
+</library>

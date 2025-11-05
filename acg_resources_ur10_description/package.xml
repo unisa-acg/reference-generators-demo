@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>acg_resources_ur10_description</name>
+  <version>0.0.0</version>
+  <description>UR10 description used by the Automatic Control Group at the University of Salerno</description>
+  <author email="g.ricciardelli3@studenti.unisa.it">Gerardo Ricciardelli</author>
+  <author email="a.coone@studenti.unisa.it">Alessio Coone</author>
+  <author email="f.donofrio10@studenti.unisa.it">Francesco D'Onofrio</author>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <exec_depend>end_effector_builder</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>ur_description</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

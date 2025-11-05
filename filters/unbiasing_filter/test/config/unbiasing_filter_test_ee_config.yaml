@@ -1,0 +1,26 @@
+mounting:
+  description_package: "acg_resources_generic_mounting_description"
+  description_file: "urdf/generic_mounting.urdf.xacro"
+  description_params:
+    height: 0.01
+    radius: 0.05
+    mass: 0.05
+
+force_torque_sensor:
+  description_package: "acg_resources_generic_force_torque_sensor_description"
+  description_file: "urdf/generic_force_torque_sensor.urdf.xacro"
+  description_params:
+    height: 0.04
+    radius: 0.05
+    mass: 0.440
+  ros2_control_package: "acg_resources_ft_sensor_gazebo_description"
+  ros2_control_file: "urdf/gazebo_force_torque_sensor.ros2_control.xacro"
+  ros2_control_params:
+    number_of_samples_for_computing_bias: 0
+  gazebo_params:
+    topic: "force_torque"
+    update_rate: 1000
+
+tool:
+  description_package: "acg_resources_long_handle_description"
+  description_file: "urdf/long_handle.urdf.xacro"

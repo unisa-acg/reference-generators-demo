@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot name="ur" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Parameters required from ur_description -->
+  <xacro:arg name="ur_type" default="ur10"/>
+  <xacro:arg name="name" default="ur10"/>
+
+  <!-- Parameters required for the simulation in Gazebo -->
+  <xacro:arg name="enable_effort_interfaces" default="false"/>
+
+  <!-- Import UR urdf file based on the arguments -->
+  <xacro:if value="$(arg enable_effort_interfaces)">
+    <!-- Import UR10 urdf file -->
+    <xacro:include filename="$(find acg_resources_ur10_description)/urdf/ur.urdf.xacro"/>
+  </xacro:if>
+  <xacro:unless value="$(arg enable_effort_interfaces)">
+    <xacro:include filename="$(find ur_description)/urdf/ur.urdf.xacro"/>
+  </xacro:unless>
+</robot>

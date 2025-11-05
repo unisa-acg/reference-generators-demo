@@ -253,6 +253,39 @@ TEST(MessageUtilitiesTest, TestIsNanWhenTwistIsNan)
 }
 
 /**
+ * @brief Test the is_nan function when the wrench is not NaN.
+ */
+TEST(MessageUtilitiesTest, TestIsNanWhenWrenchIsNotNan)
+{
+  // Initialize the wrench
+  geometry_msgs::msg::Wrench wrench;
+  wrench.force.x = 1.0;
+  wrench.force.y = 2.0;
+  wrench.force.z = 3.0;
+  wrench.torque.x = 4.0;
+  wrench.torque.y = 5.0;
+  wrench.torque.z = 6.0;
+
+  // Check if the wrench is NaN
+  EXPECT_FALSE(acg_message_utilities::is_nan(wrench));
+}
+
+/**
+ * @brief Test the is_nan function when the wrench is NaN.
+ */
+TEST(MessageUtilitiesTest, TestIsNanWhenWrenchIsNan)
+{
+  // Initialize the wrench with default values
+  geometry_msgs::msg::Wrench wrench;
+
+  // Set at least one element of the wrench to NaN
+  wrench.force.x = std::numeric_limits<double>::quiet_NaN();
+
+  // Check if the wrench is NaN
+  EXPECT_TRUE(acg_message_utilities::is_nan(wrench));
+}
+
+/**
  * @brief Test the is_valid function when the twist is valid.
  */
 TEST(MessageUtilitiesTest, TestIsValidWhenTwistIsValid)

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="fer">
+  <xacro:arg name="initial_positions_file" default="$(find acg_resources_fer_moveit_config)/config/initial_positions.yaml"/>
+  <xacro:arg name="initial_velocities_file" default="$(find acg_resources_fer_moveit_config)/config/initial_velocities.yaml"/>
+  <xacro:arg name="initial_efforts_file" default="$(find acg_resources_fer_moveit_config)/config/initial_efforts.yaml"/>
+  <xacro:arg name="parameter_file" default="$(find acg_resources_fer_moveit_config)/config/ros2_controllers.yaml"/>
+  <xacro:arg name="namespace" default="/"/>
+
+  <xacro:arg name="use_mock_hardware" default="true"/>
+  <xacro:arg name="gazebo" default="false"/>
+  <xacro:arg name="hand" default="false"/>
+  <xacro:arg name="enable_effort_interfaces" default="false"/>
+
+  <!-- Import fer urdf file -->
+  <xacro:include filename="$(find franka_description)/robots/fer/fer.urdf.xacro"/>
+
+  <!-- Import control_xacro -->
+  <xacro:include filename="$(find acg_resources_fer_moveit_config)/config/fer.ros2_control.xacro"/>
+
+  <xacro:fer_ros2_control
+    name="FakeSystem"
+    initial_positions_file="$(arg initial_positions_file)"
+    initial_velocities_file="$(arg initial_velocities_file)"
+    initial_efforts_file="$(arg initial_efforts_file)"
+    use_mock_hardware="$(arg use_mock_hardware)"
+    ros2_controller_parameter_file="$(arg parameter_file)"
+    namespace="$(arg namespace)"
+    hand="$(arg hand)"
+    enable_effort_interfaces="$(arg enable_effort_interfaces)"
+  />
+</robot>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file is based on rq_fts_ros2_driver/robotiq_ft_sensor_description/urdf/robotiq_fts150.urdf.xacro -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="force_torque_sensor_robotiq_ft150">
+  <xacro:property name="name" value="robotiq_ft150_sensor"/>
+
+  <material name="force_torque_sensor_robotiq_ft150_material_gray">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+
+  <material name="force_torque_sensor_robotiq_ft150_material_black">
+    <color rgba="0.1961 0.1961 0.1961 1.0"/>
+  </material>
+
+  <xacro:macro
+    name="build_force_torque_sensor"
+    params="mounting_link sensed_joint_name:='ft_sensed_joint' sensing_frame_name:='ft_sensing_frame' config enable_ft_sensing:=^|false sim_ignition:=^|false"
+  >
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="rpy" default_value="0 0 0"/>
+    <xacro:property name="height" value="0.0375"/>
+    <xacro:property name="sensing_frame_z_offset" value="0.01625"/>
+    <xacro:property name="mass" value="0.65"/>
+
+    <!-- Force/torque sensor -->
+
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0.01875" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="0.000661171875" ixy="0" ixz="0" iyy="0.000661171875" iyz="0" izz="0.00117"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find robotiq_ft_sensor_description)/meshes/visual/robotiq_fts150.stl"/>
+        </geometry>
+        <material name="force_torque_sensor_robotiq_ft150_material_black"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find robotiq_ft_sensor_description)/meshes/collision/robotiq_fts150.stl"/>
+        </geometry>
+        <material name="force_torque_sensor_robotiq_ft150_material_gray"/>
+        <surface>
+          <contact>
+            <ode>
+              <solver>
+                <type>world</type>
+              </solver>
+              <kp>1e15</kp>
+              <kd>1e13</kd>
+              <min_depth>0.0001</min_depth>
+              <max_vel>0.1</max_vel>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${name}">
+        <gravity>true</gravity>
+      </gazebo>
+    </xacro:if>
+
+    <joint name="${mounting_link}_to_${name}" type="fixed">
+      <origin xyz="0 0 0" rpy="${rpy}"/>
+      <parent link="${mounting_link}"/>
+      <child link="${name}"/>
+    </joint>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${mounting_link}_to_${name}">
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <provideFeedback>true</provideFeedback>
+      </gazebo>
+    </xacro:if>
+
+    <xacro:property name="last_link" value="${name}"/>
+    <xacro:property name="current_z_offset" value="0.0"/>
+
+    <xacro:if value="${enable_ft_sensing}">
+      <!-- Measurement frame -->
+
+      <link name="${sensing_frame_name}">
+        <!-- The following is a workaround for the limitations of the Gazebo F/T sensing plugin-->
+        <xacro:if value="${sim_ignition}">
+          <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1e-6"/>
+            <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+          </inertial>
+        </xacro:if>
+      </link>
+
+      <joint name="${sensed_joint_name}" type="fixed">
+        <origin xyz="0 0 ${sensing_frame_z_offset}" rpy="0 0 0"/>
+        <parent link="${mounting_link}"/>
+        <child link="${sensing_frame_name}"/>
+      </joint>
+
+      <xacro:if value="${sim_ignition}">
+        <gazebo reference="${sensed_joint_name}">
+          <provideFeedback>true</provideFeedback>
+          <preserveFixedJoint>true</preserveFixedJoint>
+        </gazebo>
+      </xacro:if>
+
+      <xacro:property name="last_link" value="${sensing_frame_name}"/>
+      <xacro:property name="current_z_offset" value="${sensing_frame_z_offset}"/>
+    </xacro:if>
+
+    <!-- F/T sensor tip -->
+
+    <link name="${name}_tip">
+      <!-- The following is a workaround for the limitations of the Gazebo F/T sensing plugin-->
+      <xacro:if value="${sim_ignition}">
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <mass value="1e-6"/>
+          <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+        </inertial>
+      </xacro:if>
+    </link>
+
+    <joint name="${last_link}_to_${name}_tip" type="fixed">
+      <origin xyz="0 0 ${height - current_z_offset}" rpy="0 0 0"/>
+      <parent link="${last_link}"/>
+      <child link="${name}_tip"/>
+    </joint>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${last_link}_to_${name}_tip">
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <provideFeedback>true</provideFeedback>
+      </gazebo>
+    </xacro:if>
+  </xacro:macro>
+
+  <xacro:property name="ft_sensor_last_link" value="${name}_tip"/>
+</robot>

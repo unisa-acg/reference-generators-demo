@@ -1,0 +1,17 @@
+gravity_compensation_test:
+  ros__parameters:
+    filter_chain:
+      filter1:
+        name: gravity_compensation_filter
+        type: gravity_compensation_filter/GravityCompensationFilterDouble
+        params:
+          ft_sensing_frame_name: "ft_sensing_frame"
+          gravity: [0.0, 0.0, -9.8] # Default gravity in gazebo
+      filter2:
+        name: unbiasing_filter
+        type: unbiasing_filter/UnbiasingFilterDouble
+        params:
+          number_of_stable_samples_for_bias: 10
+          tolerance: 0.0000001
+    bag_filename: "/test/bagfiles/validation_trajectory_0.db3"
+    bag_package: "gravity_compensation_filter"

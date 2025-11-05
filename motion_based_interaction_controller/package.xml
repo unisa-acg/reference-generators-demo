@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>motion_based_interaction_controller</name>
+  <version>0.1.0</version>
+  <description>Definition of a base class for motion-based interaction controllers</description>
+  <author email="lpagliara@unisa.it">Lorenzo Pagliara</author>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <depend>acg_common_libraries</depend>
+  <depend>acg_control_msgs</depend>
+  <depend>acg_hardware_interface_facade</depend>
+  <depend>controller_interface</depend>
+  <depend>eigen</depend>
+  <depend>filters</depend>
+  <depend>generate_parameter_library</depend>
+  <depend>geometry_msgs</depend>
+  <depend>interaction_filter_base</depend>
+  <depend>kinematics_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>tf2_eigen</depend>
+
+  <exec_depend>gravity_compensation_filter</exec_depend>
+  <exec_depend>multi_channel_moving_average_filter</exec_depend>
+  <exec_depend>unbiasing_filter</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

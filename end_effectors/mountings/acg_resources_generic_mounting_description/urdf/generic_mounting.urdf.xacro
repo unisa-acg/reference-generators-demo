@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="generic_mounting">
+  <xacro:macro name="build_mounting" params="mounting_link name:='mounting' config sim_ignition:=^|false">
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="height"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="mass"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="radius"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="rpy" default_value="0 0 0"/>
+
+    <material name="${name}_material_red">
+      <color rgba="0.9608 0.0863 0.0 1.0"/>
+    </material>
+
+    <!-- The following is a workaround for the limitations of the Gazebo F/T sensing plugin-->
+    <xacro:if value="${sim_ignition and mass == 0.0}">
+      <xacro:property name="mass" value="1e-10"/>
+    </xacro:if>
+
+    <!-- Mounting -->
+
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 ${-height / 2}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <!-- Known formula for a cylinder -->
+        <inertia ixx="${1/12 * mass * (3 * radius**2 + height**2)}" ixy="0" ixz="0" iyy="${1/12 * mass * (3 * radius**2 + height**2)}" iyz="0" izz="${1/2 * mass * radius**2}"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 ${-height / 2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${height}"/>
+        </geometry>
+        <material name="${name}_material_red"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 ${-height / 2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${height}"/>
+        </geometry>
+        <material name="${name}_material_red"/>
+        <surface>
+          <contact>
+            <ode>
+              <solver>
+                <type>world</type>
+              </solver>
+              <kp>1e15</kp>
+              <kd>1e13</kd>
+              <min_depth>0.0001</min_depth>
+              <max_vel>0.1</max_vel>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${name}">
+        <gravity>true</gravity>
+      </gazebo>
+    </xacro:if>
+
+    <!-- Fixed joint to connect the mechanical mounting with the robot last link -->
+
+    <joint name="${mounting_link}_to_${name}" type="fixed">
+      <origin xyz="0 0 ${height}" rpy="${rpy}"/>
+      <parent link="${mounting_link}"/>
+      <child link="${name}"/>
+    </joint>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${mounting_link}_to_${name}">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+      </gazebo>
+    </xacro:if>
+  </xacro:macro>
+</robot>

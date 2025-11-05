@@ -1,0 +1,10 @@
+# Default initial positions for fer's ros2_control fake system
+initial_positions:
+  fer_joint1: 0.0
+  fer_joint2: -0.785
+  fer_joint3: 0.0
+  fer_joint4: -2.356
+  fer_joint5: 0.0
+  fer_joint6: 1.571
+  fer_joint7: 0.785
+  fer_finger_joint1: 0

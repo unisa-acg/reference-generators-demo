@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ur10_gravity_compensation_pd_controller_demo</name>
+  <version>0.1.0</version>
+  <description>Demo of a PD controller with gravity compensation using the UR10 robot</description>
+  <author email="drisi@unisa.it">Davide Risi</author>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>acg_resources_ur10_description</exec_depend>
+  <exec_depend>acg_resources_ur10_moveit_config</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <exec_depend>gravity_compensation_pd_controller</exec_depend>
+  <exec_depend>kdl_inverse_dynamics_solver</exec_depend>
+  <exec_depend>kinematics_interface_kdl</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

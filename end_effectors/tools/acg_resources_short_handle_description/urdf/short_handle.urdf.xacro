@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="short_handle">
+  <xacro:property name="name" value="short_handle"/>
+
+  <xacro:macro name="build_tool" params="mounting_link mounting_to_tool_joint:='' config sim_ignition:=^|false">
+    <xacro:if value="${mounting_to_tool_joint == ''}">
+      <xacro:property name="mounting_to_tool_joint" value="${mounting_link + '_to_' + name}"/>
+    </xacro:if>
+
+    <xacro:property name="mass" value="2"/>
+    <xacro:property name="height" value="0.122"/>
+    <xacro:property name="com_z_offset" value="3.31150e-2"/>
+
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="rpy" default_value="0 0 0"/>
+
+    <material name="${name}_material_gray">
+      <color rgba="0.2 0.2 0.2 1.0"/>
+    </material>
+
+    <!-- Short handle -->
+
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 ${-height + com_z_offset}" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="3.02206e-11" ixy="0" ixz="0" iyy="3.02205e-11" iyz="0" izz="2.48323e-12"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 ${-height}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find acg_resources_short_handle_description)/meshes/visual/${name}.dae"/>
+        </geometry>
+        <material name="${name}_material_gray"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 ${-height}" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="file://$(find acg_resources_short_handle_description)/meshes/collision/${name}.stl"/>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <solver>
+                <type>world</type>
+              </solver>
+              <kp>1e15</kp>
+              <kd>1e13</kd>
+              <min_depth>0.0001</min_depth>
+              <max_vel>0.1</max_vel>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${name}">
+        <gravity>true</gravity>
+      </gazebo>
+    </xacro:if>
+
+    <!-- Fixed joint to connect the short handle tip with the previous link -->
+
+    <joint name="${mounting_to_tool_joint}" type="fixed">
+      <origin xyz="0 0 ${height}" rpy="${rpy}"/>
+      <parent link="${mounting_link}"/>
+      <child link="${name}"/>
+    </joint>
+    <xacro:if value="${sim_ignition}">
+      <gazebo reference="${mounting_to_tool_joint}">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+      </gazebo>
+    </xacro:if>
+  </xacro:macro>
+</robot>

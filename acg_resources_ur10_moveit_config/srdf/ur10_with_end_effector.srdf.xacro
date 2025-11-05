@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This file is the SRDF description of a UR10 robot with a generic end-effector.
+-->
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur10_with_end_effector">
+  <xacro:arg name="ee_config_file" default=""/>
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="name" default="ur10"/>
+
+  <xacro:property name="tool_0_name" value="$(arg prefix)tool0"/>
+  <xacro:property name="wrist_1_link_name" value="$(arg prefix)wrist_1_link"/>
+  <xacro:property name="wrist_2_link_name" value="$(arg prefix)wrist_2_link"/>
+  <xacro:property name="wrist_3_link_name" value="$(arg prefix)wrist_3_link"/>
+
+  <!-- Import UR srdf file -->
+  <xacro:include filename="$(find ur_moveit_config)/srdf/ur.srdf.xacro"/>
+
+  <!-- Extend SRD with end-effector tags -->
+  <xacro:unless value="$(eval ee_config_file == '')">
+    <xacro:property name="ee_config_file" value="$(arg ee_config_file)"/>
+    <xacro:property name="ee_config" value="${xacro.load_yaml(ee_config_file)}"/>
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:define_property_from_dict input_dict="${ee_config}" name="ignored_collision_links" default_value="${[wrist_1_link_name, wrist_2_link_name, wrist_3_link_name]}"/>
+    <xacro:include filename="$(find end_effector_builder)/urdf/build_end_effector_srdf.xacro"/>
+    <xacro:build_end_effector_srdf
+      ee_mounting_link="${tool_0_name}"
+      moveit_end_effector_parent_link="$(arg prefix)flange"
+      ee_config_file="$(arg ee_config_file)"
+      moveit_manipulator_group_name="$(arg prefix)$(arg name)_manipulator"
+      moveit_end_effector_group_name="$(arg prefix)$(arg name)_end_effector"
+      moveit_end_effector_name="end_effector"
+      ignore_ee_collision_links="${ignored_collision_links}"
+    />
+  </xacro:unless>
+</robot>

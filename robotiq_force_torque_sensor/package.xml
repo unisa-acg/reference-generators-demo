@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robotiq_force_torque_sensor</name>
+  <version>0.0.0</version>
+  <description>Wrapper for Robotiq F/T sensor driver</description>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <author email="a.coone@studenti.unisa.it">Alessio Coone</author>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>plotjuggler_ros</depend>
+  <depend>robotiq_ft_sensor_description</depend>
+  <depend>robotiq_ft_sensor_hardware</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

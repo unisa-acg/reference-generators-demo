@@ -8,7 +8,7 @@
  * Org.:    UNISA
  * Date:    Feb 7, 2025
  *
- * This class contains utility functions for converting messages.
+ * This library contains utility functions for converting messages.
  *
  * -------------------------------------------------------------------
  */
@@ -268,6 +268,14 @@ bool is_nan(const geometry_msgs::msg::Pose& pose);
  * @return true if any component of the twist is NaN, false otherwise.
  */
 bool is_nan(const geometry_msgs::msg::Twist& twist);
+
+/**
+ * @brief Check if the wrench is NaN. A wrench is considered NaN if any of its force or torque components are NaN.
+ *
+ * @param[in] wrench The wrench to check.
+ * @return true if the wrench is NaN, false otherwise.
+ */
+bool is_nan(const geometry_msgs::msg::Wrench& wrench);
 
 /**
  * @brief Validates the twist message.

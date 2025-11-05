@@ -1,0 +1,11 @@
+<library path="unbiasing_filter">
+  <class
+      name="unbiasing_filter/UnbiasingFilterDouble"
+      type="unbiasing_filter::UnbiasingFilter&lt;double&gt;"
+	    base_class_type="filters::MultiChannelFilterBase&lt;double&gt;">
+    <description>
+	    This is a unbiasing filter, which works on a stream of vector of doubles,
+      whose purpose is to remove bias from raw measures.
+    </description>
+  </class>
+</library>

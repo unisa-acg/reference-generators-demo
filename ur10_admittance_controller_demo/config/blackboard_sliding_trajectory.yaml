@@ -1,0 +1,62 @@
+task_space_trajectory:
+  header:
+    stamp: {sec: 0, nanosec: 0}
+    frame_id: 'world'
+  points:
+    - point:
+        motion_frame: 'base_link'
+        pose:
+          position: {x: 0.730, y: 0.385, z: 0.798}
+          orientation: {w: 0.705, x: 0.011, y: 0.709, z: -0.004}
+        twist:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        acceleration:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_frame: 'ft_sensing_frame'
+        wrench:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_derivative:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+      time_from_start: {sec: 0, nanosec: 0}
+    - point:
+        motion_frame: 'base_link'
+        pose:
+          position: {x: 0.750, y: 0.385, z: 0.798}
+          orientation: {w: 0.705, x: 0.011, y: 0.709, z: -0.004}
+        twist:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        acceleration:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_frame: 'ft_sensing_frame'
+        wrench:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_derivative:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+      time_from_start: {sec: 10, nanosec: 0}
+    - point:
+        motion_frame: 'base_link'
+        pose:
+          position: {x: 0.750, y: 0.385, z: 0.598}
+          orientation: {w: 0.705, x: 0.011, y: 0.709, z: -0.004}
+        twist:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        acceleration:
+          linear: {x: 0.0, y: 0.0, z: 0.0}
+          angular: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_frame: 'ft_sensing_frame'
+        wrench:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+        wrench_derivative:
+          force: {x: 0.0, y: 0.0, z: 0.0}
+          torque: {x: 0.0, y: 0.0, z: 0.0}
+      time_from_start: {sec: 30, nanosec: 0}

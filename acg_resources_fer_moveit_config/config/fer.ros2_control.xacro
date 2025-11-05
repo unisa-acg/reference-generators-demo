@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro
+    name="fer_ros2_control"
+    params="name initial_positions_file initial_velocities_file initial_efforts_file ros2_controller_parameter_file namespace:=/ use_mock_hardware:=^true hand enable_effort_interfaces:=^false"
+  >
+    <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+    <xacro:property name="initial_velocities" value="${xacro.load_yaml(initial_velocities_file)['initial_velocities']}"/>
+    <xacro:property name="initial_efforts" value="${xacro.load_yaml(initial_efforts_file)['initial_efforts']}"/>
+    <xacro:property name="hand" default="${hand}"/>
+
+    <xacro:arg name="tf_prefix" default="fer_"/>
+
+    <ros2_control name="${name}" type="system">
+      <hardware>
+        <xacro:if value="${use_mock_hardware}">
+          <!-- By default, set up controllers for simulation. This won't work on real hardware -->
+          <plugin>mock_components/GenericSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${use_mock_hardware}">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:unless>
+      </hardware>
+      <joint name="$(arg tf_prefix)joint1">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint1']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-2.9671</param>
+            <param name="max">2.9671</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint1']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint1']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint2">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint2']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-1.8326</param>
+            <param name="max">1.8326</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint2']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint2']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint3">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint3']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-2.9671</param>
+            <param name="max">2.9671</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint3']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint3']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint4">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint4']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-3.1416</param>
+            <param name="max">0.0873</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint4']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint4']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint5">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint5']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-2.9671</param>
+            <param name="max">2.9671</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint5']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint5']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint6">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint6']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-0.0873</param>
+            <param name="max">3.8223</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint6']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint6']}</param>
+        </state_interface>
+      </joint>
+      <joint name="$(arg tf_prefix)joint7">
+        <xacro:if value="${enable_effort_interfaces}">
+          <command_interface name="effort"/>
+          <state_interface name="effort">
+            <param name="initial_value">${initial_efforts['fer_joint7']}</param>
+          </state_interface>
+        </xacro:if>
+        <xacro:unless value="${enable_effort_interfaces}">
+          <command_interface name="position">
+            <param name="min">-2.9671</param>
+            <param name="max">2.9671</param>
+          </command_interface>
+          <command_interface name="velocity"/>
+        </xacro:unless>
+        <state_interface name="position">
+          <param name="initial_value">${initial_positions['fer_joint7']}</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">${initial_velocities['fer_joint7']}</param>
+        </state_interface>
+      </joint>
+      <xacro:if value="${hand}">
+        <joint name="$(arg tf_prefix)finger_joint1">
+          <command_interface name="position">
+            <param name="min">0.0</param>
+            <param name="max">0.04</param>
+          </command_interface>
+          <state_interface name="position">
+            <param name="initial_value">${initial_positions['fer_finger_joint1']}</param>
+          </state_interface>
+          <state_interface name="velocity">
+            <param name="initial_value">${initial_velocities['fer_finger_joint1']}</param>
+          </state_interface>
+        </joint>
+      </xacro:if>
+    </ros2_control>
+
+    <xacro:unless value="${use_mock_hardware}">
+      <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <ros>
+            <namespace>${namespace}</namespace>
+          </ros>
+          <parameters>${ros2_controller_parameter_file}</parameters>
+        </plugin>
+      </gazebo>
+    </xacro:unless>
+  </xacro:macro>
+</robot>

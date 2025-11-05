@@ -1,0 +1,34 @@
+# MoveIt uses this configuration for controller management
+
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+
+# As explained at
+# https://moveit.picknik.ai/humble/doc/examples/controller_configuration/controller_configuration_tutorial.html#example-controller-manager
+# this configuration file configures an interface between the MoveIt! planning system
+# and ROS2 controllers. The names provided here must match the names in ros2_controllers.yaml.
+# When the moveit_manage_controllers move_group node's parameter is set to true,
+# the ROS2 controllers are managed by MoveIt! according to the configurations here below.
+moveit_simple_controller_manager:
+  controller_names:
+    - fer_arm_trajectory_controller
+    - hand_controller
+
+  fer_arm_trajectory_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints:
+      - fer_joint1
+      - fer_joint2
+      - fer_joint3
+      - fer_joint4
+      - fer_joint5
+      - fer_joint6
+      - fer_joint7
+
+  hand_controller:
+    type: GripperCommand
+    joints:
+      - fer_finger_joint1
+    action_ns: gripper_cmd
+    default: true

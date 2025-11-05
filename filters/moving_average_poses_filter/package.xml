@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>moving_average_poses_filter</name>
+  <version>0.0.0</version>
+  <description>This package contains the moving average poses filter</description>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <author email="m.marsico10@studenti.unisa.it">Michele Marsico</author>
+  <author email="lpagliara@unisa.it">Lorenzo Pagliara</author>
+  <license>BSD</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>eigen</depend>
+  <depend>filters</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>geometry_msgs</test_depend>
+  <test_depend>rclcpp</test_depend>
+  <test_depend>ros_testing</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

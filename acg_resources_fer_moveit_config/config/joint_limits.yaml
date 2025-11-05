@@ -1,0 +1,64 @@
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+
+# For beginners, we downscale velocity and acceleration limits.
+# You can always specify higher scaling factors (<= 1.0) in your motion requests.  # Increase the values below to 1.0 to always move at maximum speed.
+default_velocity_scaling_factor: 0.1
+default_acceleration_scaling_factor: 0.1
+
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+
+# The joint limits for the Franka Emika Robot Arm (FER) were sourced from the official franka_description repository, specifically from the joint_limits.yaml file located at:
+
+# https://github.com/frankarobotics/franka_description/blob/566ba44abc48be2fca16050c406562e22f85793b/robots/fer/joint_limits.yaml
+
+# The joint limits for the Franka Hand fingers were obtained from the corresponding XACRO file, available at:
+
+# https://github.com/frankarobotics/franka_description/blob/566ba44abc48be2fca16050c406562e22f85793b/end_effectors/common/franka_hand.xacro#L121
+
+joint_limits:
+  fer_finger_joint1:
+    has_velocity_limits: true
+    max_velocity: 0.20000000000000001
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_finger_joint2:
+    has_velocity_limits: true
+    max_velocity: 0.20000000000000001
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint1:
+    has_velocity_limits: true
+    max_velocity: 2.1750
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint2:
+    has_velocity_limits: true
+    max_velocity: 2.1750
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint3:
+    has_velocity_limits: true
+    max_velocity: 2.1750
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint4:
+    has_velocity_limits: true
+    max_velocity: 2.1750
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint5:
+    has_velocity_limits: true
+    max_velocity: 2.6100
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint6:
+    has_velocity_limits: true
+    max_velocity: 2.6100
+    has_acceleration_limits: false
+    max_acceleration: 0
+  fer_joint7:
+    has_velocity_limits: true
+    max_velocity: 2.6100
+    has_acceleration_limits: false
+    max_acceleration: 0

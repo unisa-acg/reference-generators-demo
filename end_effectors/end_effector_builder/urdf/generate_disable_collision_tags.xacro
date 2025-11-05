@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="generate_disable_collision_tags">
+  <xacro:macro name="generate_disable_collision_tags" params="first_link second_link_list reason:=Never">
+    <xacro:if value="${second_link_list}">
+      <disable_collisions link1="${first_link}" link2="${second_link_list[0]}" reason="${reason}"/>
+      <xacro:property name="second_link_list" value="${second_link_list[1:]}" lazy_eval="false"/>
+      <xacro:generate_disable_collision_tags first_link="${first_link}" second_link_list="${second_link_list}" reason="${reason}"/>
+    </xacro:if>
+  </xacro:macro>
+</robot>

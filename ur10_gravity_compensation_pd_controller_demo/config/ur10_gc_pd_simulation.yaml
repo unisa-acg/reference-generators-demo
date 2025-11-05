@@ -1,0 +1,96 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    gravity_compensation_pd_controller:
+      type: gravity_compensation_pd_controller/GravityCompensationPDController
+
+joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    command_joints:
+      - gravity_compensation_pd_controller/shoulder_pan_joint
+      - gravity_compensation_pd_controller/shoulder_lift_joint
+      - gravity_compensation_pd_controller/elbow_joint
+      - gravity_compensation_pd_controller/wrist_1_joint
+      - gravity_compensation_pd_controller/wrist_2_joint
+      - gravity_compensation_pd_controller/wrist_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 100.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 5.0
+      shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+
+gravity_compensation_pd_controller:
+  ros__parameters:
+    joints:
+      - shoulder_pan_joint
+      - shoulder_lift_joint
+      - elbow_joint
+      - wrist_1_joint
+      - wrist_2_joint
+      - wrist_3_joint
+
+    robot_name: ur10
+
+    joint_space_reference_controller: joint_space_reference_generator
+
+    state_interfaces_names_override:
+      position:
+        - shoulder_pan_joint/position
+        - shoulder_lift_joint/position
+        - elbow_joint/position
+        - wrist_1_joint/position
+        - wrist_2_joint/position
+        - wrist_3_joint/position
+      velocity:
+        - shoulder_pan_joint/velocity
+        - shoulder_lift_joint/velocity
+        - elbow_joint/velocity
+        - wrist_1_joint/velocity
+        - wrist_2_joint/velocity
+        - wrist_3_joint/velocity
+
+    command_interfaces_names_override:
+      effort:
+        - shoulder_pan_joint/effort
+        - shoulder_lift_joint/effort
+        - elbow_joint/effort
+        - wrist_1_joint/effort
+        - wrist_2_joint/effort
+        - wrist_3_joint/effort
+
+    dynamics_solver:
+      dynamics_solver_plugin: kdl_inverse_dynamics_solver/InverseDynamicsSolverKDL
+      tip: tool0
+      root: base_link
+
+    p_gains: [2000.0, 3000.0, 4000.0, 400.0, 400.0, 5.0]
+    d_gains: [100.0, 100.0, 100.0, 10.0, 10.0, 0.2]
+
+    compensate_gravity: true

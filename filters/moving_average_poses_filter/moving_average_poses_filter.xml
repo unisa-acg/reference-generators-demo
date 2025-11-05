@@ -1,0 +1,10 @@
+<library path="moving_average_poses_filter">
+  <class
+      name="moving_average_poses_filter/MovingAveragePosesFilter"
+      type="moving_average_poses_filter::MovingAveragePosesFilter&lt;double&gt;"
+	  base_class_type="filters::MultiChannelFilterBase&lt;double&gt;">
+    <description>
+	    A moving average filter for poses. It averages position and orientation (quaternions).
+    </description>
+  </class>
+</library>

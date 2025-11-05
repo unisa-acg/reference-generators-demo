@@ -41,8 +41,11 @@ set(MESSAGE_UTILITIES_LIB_INCLUDE_DEPENDS
     Eigen3
     acg_control_msgs
     geometry_msgs
+    kinematics_interface
     rclcpp
     tf2
+    tf2_eigen
+    tf2_geometry_msgs
 )
 
 set(URDF_UTILITIES_LIB_INCLUDE_DEPENDS
@@ -51,12 +54,17 @@ set(URDF_UTILITIES_LIB_INCLUDE_DEPENDS
     urdf
 )
 
+set(MATH_UTILITIES_LIB_INCLUDE_DEPENDS
+    Eigen3
+)
+
 foreach(dependency IN
         ITEMS ${DIAGNOSTICS_LIB_INCLUDE_DEPENDS}
               ${INTERPOLATION_LIB_INCLUDE_DEPENDS}
               ${KINEMATICS_LIB_INCLUDE_DEPENDS}
               ${MESSAGE_UTILITIES_LIB_INCLUDE_DEPENDS}
               ${URDF_UTILITIES_LIB_INCLUDE_DEPENDS}
+              ${MATH_UTILITIES_LIB_INCLUDE_DEPENDS}
 )
   find_package(${dependency} REQUIRED)
 endforeach()
@@ -76,6 +84,9 @@ add_library(message_utilities_lib SHARED
 add_library(urdf_utilities_lib SHARED
             src/urdf_utilities.cpp
 )
+add_library(math_utilities_lib SHARED
+            src/math_utilities.cpp
+)
 
 target_compile_features(
   interpolation_lib
@@ -93,6 +104,10 @@ target_compile_features(
   urdf_utilities_lib
   PUBLIC cxx_std_17
 )
+target_compile_features(
+  math_utilities_lib
+  PUBLIC cxx_std_17
+)
 
 target_include_directories(
   interpolation_lib
@@ -111,6 +126,11 @@ target_include_directories(
 )
 target_include_directories(
   urdf_utilities_lib
+  PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include/acg_common_libraries>
+)
+target_include_directories(
+  math_utilities_lib
   PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:include/acg_common_libraries>
 )
@@ -124,6 +144,7 @@ ament_target_dependencies(interpolation_lib ${INTERPOLATION_LIB_INCLUDE_DEPENDS}
 ament_target_dependencies(kinematics_lib ${KINEMATICS_LIB_INCLUDE_DEPENDS})
 ament_target_dependencies(message_utilities_lib ${MESSAGE_UTILITIES_LIB_INCLUDE_DEPENDS})
 ament_target_dependencies(urdf_utilities_lib ${URDF_UTILITIES_LIB_INCLUDE_DEPENDS})
+ament_target_dependencies(math_utilities_lib ${MATH_UTILITIES_LIB_INCLUDE_DEPENDS})
 
 install(DIRECTORY include/
         DESTINATION include
@@ -169,6 +190,14 @@ install(TARGETS urdf_utilities_lib
         INCLUDES
         DESTINATION include
 )
+install(TARGETS math_utilities_lib
+        EXPORT export_math_utilities_lib
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES
+        DESTINATION include
+)
 
 if(BUILD_TESTING)
   # find test dependencies
@@ -198,6 +227,7 @@ if(BUILD_TESTING)
     test/test_interpolation.cpp
     test/test_message_utilities.cpp
     test/test_urdf_utilities.cpp
+    test/test_math_utilities.cpp
   )
 
   ament_target_dependencies(${TEST_NAME} ${THIS_TEST_PACKAGE_INCLUDE_DEPENDS})
@@ -215,6 +245,7 @@ if(BUILD_TESTING)
     interpolation_lib
     message_utilities_lib
     urdf_utilities_lib
+    math_utilities_lib
   )
 
   install(TARGETS ${TEST_NAME}
@@ -231,6 +262,7 @@ ament_export_dependencies(
   ${KINEMATICS_LIB_INCLUDE_DEPENDS}
   ${MESSAGE_UTILITIES_LIB_INCLUDE_DEPENDS}
   ${URDF_UTILITIES_LIB_INCLUDE_DEPENDS}
+  ${MATH_UTILITIES_LIB_INCLUDE_DEPENDS}
 )
 
 ament_export_targets(export_diagnostics_lib HAS_LIBRARY_TARGET)
@@ -238,4 +270,5 @@ ament_export_targets(export_interpolation_lib HAS_LIBRARY_TARGET)
 ament_export_targets(export_kinematics_lib HAS_LIBRARY_TARGET)
 ament_export_targets(export_message_utilities_lib HAS_LIBRARY_TARGET)
 ament_export_targets(export_urdf_utilities_lib HAS_LIBRARY_TARGET)
+ament_export_targets(export_math_utilities_lib HAS_LIBRARY_TARGET)
 ament_package()

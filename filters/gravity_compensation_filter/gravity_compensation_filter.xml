@@ -1,0 +1,11 @@
+<library path="gravity_compensation_filter">
+  <class
+      name="gravity_compensation_filter/GravityCompensationFilterDouble"
+      type="gravity_compensation_filter::GravityCompensationFilter&lt;double&gt;"
+	    base_class_type="filters::MultiChannelFilterBase&lt;double&gt;">
+    <description>
+      This is a gravity compensation filter, which works on a stream of vector of doubles,
+      whose purpose is to remove gravity bias from raw force/torque measures.
+    </description>
+  </class>
+</library>

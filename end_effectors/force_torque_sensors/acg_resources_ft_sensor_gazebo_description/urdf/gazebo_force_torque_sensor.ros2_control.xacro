@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Gazebo force/torque sensor ros2_control hardware description">
+  <xacro:macro name="build_ros2_control_description" params="config">
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+
+    <xacro:define_property_from_dict input_dict="${config}" name="number_of_samples_for_computing_bias" default_value="10"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="stable_readings_tolerance" default_value="1e-6"/>
+
+    <!-- Gazebo force/torque sensor ros2_control hardware description -->
+    <xacro:include filename="$(find gazebo_force_torque_sensor)/config/gazebo_fts.ros2_control.xacro"/>
+    <xacro:gazebo_ft_sensor number_of_samples_for_computing_bias="${number_of_samples_for_computing_bias}" stable_readings_tolerance="${stable_readings_tolerance}"/>
+  </xacro:macro>
+</robot>

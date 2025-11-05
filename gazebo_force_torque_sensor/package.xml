@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>gazebo_force_torque_sensor</name>
+  <version>0.0.0</version>
+  <description>The Gazebo F/T Sensor plugin</description>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <author email="a.coone@studenti.unisa.it">Alessio Coone</author>
+  <license>BSD</license>
+
+  <exec_depend>force_torque_sensor_broadcaster</exec_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>acg_common_libraries</depend>
+  <depend>geometry_msgs</depend>
+  <depend>gz_ros2_control</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

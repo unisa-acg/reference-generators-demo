@@ -1,0 +1,10 @@
+<library path="moving_average_filter">
+  <class
+      name="moving_average_filter/MovingAverageFilterDouble"
+      type="moving_average_filter::MovingAverageFilter&lt;double&gt;"
+	    base_class_type="filters::FilterBase&lt;double&gt;">
+    <description>
+	    This is a moving window average filter which works on a stream of doubles.
+    </description>
+  </class>
+</library>

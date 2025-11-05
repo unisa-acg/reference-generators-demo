@@ -142,9 +142,9 @@ void transform_task_space_point_frames(kinematics_interface::KinematicsInterface
                                        acg_control_msgs::msg::TaskSpacePoint& task_space_point);
 
 /**
- * @brief Transform the wrench of the task space point to the desired frame.
+ * @brief Transform the wrench to the desired frame.
  *
- * This function transforms the wrench of the task space point to be expressed in the desired wrench frame.
+ * This function transforms the wrench to be expressed in the desired wrench frame.
  * The force and torque components of the wrench are updated accordingly.
  *
  * @param[in] kinematics The robot's kinematics interface.
@@ -157,7 +157,56 @@ void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematic
                             const std::string& desired_wrench_frame, const std::string& wrench_frame, geometry_msgs::msg::Wrench& wrench);
 
 /**
- * @brief Computes the error pose between the desired and current poses.
+ * @brief Transform the wrench to the desired frame.
+ *
+ * This function transforms the wrench to be expressed in the desired wrench frame.
+ * The force and torque components of the wrench are updated accordingly.
+ * The current wrench frame must be specified in the \c frame_id field of the message's header.
+ *
+ * @param[in] kinematics The robot's kinematics interface.
+ * @param[in] joint_positions The robot's joint positions.
+ * @param[in] desired_wrench_frame The target wrench frame for the transformation.
+ * @param[in,out] wrench The wrench to be transformed. It is updated with the new frame.
+ */
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const std::string& desired_wrench_frame, geometry_msgs::msg::WrenchStamped& wrench);
+
+/**
+ * @brief Transforms the wrench to the desired frame.
+ *
+ * This function transforms the wrench to be expressed in the desired frame,
+ * represented by the desired transform.
+ * The force and torque components of the wrench are updated accordingly.
+ *
+ * @param[in] kinematics The robot's kinematics interface.
+ * @param[in] joint_positions The robot's joint positions.
+ * @param[in] desired_transform The desired transform expressed in the motion frame.
+ * @param[in] motion_frame The frame with respect to which the desired transform is defined.
+ * @param[in] wrench_frame The current wrench frame.
+ * @param[in,out] wrench The wrench to be transformed. It is updated with the new frame.
+ */
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const geometry_msgs::msg::Transform& desired_transform, const std::string& motion_frame, const std::string& wrench_frame,
+                            geometry_msgs::msg::Wrench& wrench);
+
+/**
+ * @brief Transforms the wrench to the desired frame.
+ *
+ * This function transforms the wrench to be expressed in the desired frame,
+ * represented by the desired transform.
+ * The force and torque components of the wrench are updated accordingly.
+ * The current wrench frame and the transform frame must be specified in the \c frame_id field of the relative message's header.
+ *
+ * @param[in] kinematics The robot's kinematics interface.
+ * @param[in] joint_positions The robot's joint positions.
+ * @param[in] desired_transform The desired transform expressed in the motion frame.
+ * @param[in,out] wrench The wrench to be transformed. It is updated with the new frame.
+ */
+void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematics, const std::vector<double>& joint_positions,
+                            const geometry_msgs::msg::TransformStamped& desired_transform, geometry_msgs::msg::WrenchStamped& wrench);
+
+/**
+ * @brief Computes the error pose between the desired and current poses using KDL.
  *
  * @param[in] desired_pose The desired pose.
  * @param[in] current_pose The current pose.
@@ -165,5 +214,61 @@ void transform_wrench_frame(kinematics_interface::KinematicsInterface& kinematic
  */
 void compute_pose_error(const geometry_msgs::msg::Pose& desired_pose, const geometry_msgs::msg::Pose& current_pose,
                         Eigen::Matrix<double, 6, 1>& error);
+
+/**
+ * @brief Computes the error twist between the desired and current twists.
+ *
+ * @param[in] desired_twist The desired twist.
+ * @param[in] current_twist The current twist.
+ * @param[out] error The computed error twist, which is a 6D vector containing the linear and angular velocity errors.
+ */
+void compute_twist_error(const geometry_msgs::msg::Twist& desired_twist, const geometry_msgs::msg::Twist& current_twist,
+                         Eigen::Matrix<double, 6, 1>& error);
+
+/**
+ * @brief Computes the error wrench between the desired and current wrenches.
+ *
+ * @param[in] desired_wrench The desired wrench.
+ * @param[in] current_wrench The current wrench.
+ * @param[out] error The computed error wrench, which is a 6D vector containing the force and momentum errors.
+ */
+void compute_wrench_error(const geometry_msgs::msg::Wrench& desired_wrench, const geometry_msgs::msg::Wrench& current_wrench,
+                          Eigen::Matrix<double, 6, 1>& error);
+
+/**
+ * @brief Computes the Euclidean distance between two points using the L2 norm.
+ *
+ * @param[in] point1 The first point.
+ * @param[in] point2 The second point.
+ * @return The Euclidean distance between the two points in meters.
+ */
+double compute_euclidean_distance(const geometry_msgs::msg::Point& point1, const geometry_msgs::msg::Point& point2);
+
+/**
+ * @brief Computes the angular distance between two quaternions.
+ *
+ * This function computes the angular distance between two quaternions using the Eigen library.
+ * The angular distance is defined as the angle of the rotation, in the axis–angle representation, that transforms one quaternion into the other.
+ *
+ * @param[in] quat1 The first quaternion.
+ * @param[in] quat2 The second quaternion.
+ * @return The angular distance between the two quaternions in radians.
+ */
+double compute_angular_distance(const geometry_msgs::msg::Quaternion& quat1, const geometry_msgs::msg::Quaternion& quat2);
+
+/**
+ * @brief Checks if two poses are close to each other within specified tolerances.
+ *
+ * This function checks if the translational and rotational distances between two poses are within the given tolerances.
+ * It uses the compute_euclidean_distance and compute_angular_distance functions to calculate the distances.
+ *
+ * @param[in] pose1 The first pose.
+ * @param[in] pose2 The second pose.
+ * @param[in] translational_tolerance The maximum allowable translational distance in meters.
+ * @param[in] rotational_tolerance The maximum allowable rotational distance in radians.
+ * @return true if the poses are close within the specified tolerances, false otherwise.
+ */
+bool is_pose_close(const geometry_msgs::msg::Pose& pose1, const geometry_msgs::msg::Pose& pose2, const double translational_tolerance,
+                   const double rotational_tolerance);
 
 }  // namespace acg_kinematics

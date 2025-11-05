@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>gravity_compensation_filter</name>
+  <version>0.1.0</version>
+  <description>The gravity compensation filter package</description>
+  <maintainer email="eferrentino@unisa.it">Enrico Ferrentino</maintainer>
+  <author email="a.coone@studenti.unisa.it">Alessio Coone</author>
+  <author email="lpagliara@unisa.it">Lorenzo Pagliara</author>
+  <license>BSD</license>
+
+  <buildtool_depend>gazebo_force_torque_sensor</buildtool_depend>
+
+  <depend>acg_common_libraries</depend>
+  <depend>filters</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>urdf</depend>
+
+  <test_depend>acg_resources_ur10_moveit_config</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>geometry_msgs</test_depend>
+  <test_depend>ros_testing</test_depend>
+  <test_depend>rosbag2_cpp</test_depend>
+  <test_depend>tf2</test_depend>
+  <test_depend>tf2_geometry_msgs</test_depend>
+  <test_depend>tf2_ros</test_depend>
+  <test_depend>trajectory_msgs</test_depend>
+  <test_depend>unbiasing_filter</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

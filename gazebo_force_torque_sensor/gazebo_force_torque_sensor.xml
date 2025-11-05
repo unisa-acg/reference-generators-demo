@@ -1,0 +1,9 @@
+<library path="gazebo_force_torque_sensor">
+  <class name="gz_ros2_control/GazeboFTSensor"
+          type="gz_ros2_control::GazeboFTSensor"
+          base_class_type="gz_ros2_control::GazeboSimSystemInterface">
+    <description>
+      Implements a Hardware Interface plugin for Force/Torque sensing in Ignition.
+    </description>
+  </class>
+</library>

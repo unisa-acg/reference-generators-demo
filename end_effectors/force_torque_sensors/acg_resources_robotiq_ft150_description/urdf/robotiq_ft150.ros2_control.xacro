@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Robotiq FT150 force/torque sensor ros2_control hardware description">
+  <xacro:macro name="build_ros2_control_description" params="config">
+    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+
+    <xacro:define_property_from_dict input_dict="${config}" name="name" default_value=""/>
+    <xacro:define_property_from_dict input_dict="${config}" name="use_fake_mode" default_value="false"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="max_retries" default_value="1"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="read_rate" default_value="10"/>
+    <xacro:define_property_from_dict input_dict="${config}" name="ftdi_id" default_value=""/>
+    <xacro:define_property_from_dict input_dict="${config}" name="tf_prefix" default_value=""/>
+
+    <!-- Robotiq FT150 force/torque sensor ros2_control hardware description -->
+
+    <xacro:include filename="$(find robotiq_ft_sensor_description)/urdf/robotiq_fts.ros2_control.xacro"/>
+    <xacro:robotiq_fts_ros2_control name="${name}" use_fake_mode="${use_fake_mode}" max_retries="${max_retries}" read_rate="${read_rate}" ftdi_id="${ftdi_id}" tf_prefix="${tf_prefix}"/>
+  </xacro:macro>
+</robot>

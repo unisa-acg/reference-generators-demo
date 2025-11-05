@@ -1,0 +1,113 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_space_reference_generator:
+      type: joint_space_reference_generator/JointSpaceReferenceGenerator
+
+    gravity_compensation_pd_controller:
+      type: gravity_compensation_pd_controller/GravityCompensationPDController
+
+joint_space_reference_generator:
+  ros__parameters:
+    joints:
+      - fer_joint1
+      - fer_joint2
+      - fer_joint3
+      - fer_joint4
+      - fer_joint5
+      - fer_joint6
+      - fer_joint7
+    state_interfaces:
+      - position
+      - velocity
+    robot_name: fer
+    state_interfaces_names_override:
+      position:
+        - fer_joint1/position
+        - fer_joint2/position
+        - fer_joint3/position
+        - fer_joint4/position
+        - fer_joint5/position
+        - fer_joint6/position
+        - fer_joint7/position
+      velocity:
+        - fer_joint1/velocity
+        - fer_joint2/velocity
+        - fer_joint3/velocity
+        - fer_joint4/velocity
+        - fer_joint5/velocity
+        - fer_joint6/velocity
+        - fer_joint7/velocity
+
+    joint_space_command_controller: gravity_compensation_pd_controller
+    joint_space_command_interfaces:
+      - position
+
+    kinematics:
+      plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
+      plugin_package: kinematics_interface
+      tip: fer_link8
+
+    task_space_reference_frame: fer_link0
+    wrench_reference_frame: fer_link8
+
+    publish_task_space_reference:
+      enable: true
+      frequency: 100
+
+gravity_compensation_pd_controller:
+  ros__parameters:
+    joints:
+      - fer_joint1
+      - fer_joint2
+      - fer_joint3
+      - fer_joint4
+      - fer_joint5
+      - fer_joint6
+      - fer_joint7
+
+    robot_name: fer
+
+    joint_space_reference_controller: joint_space_reference_generator
+
+    state_interfaces_names_override:
+      position:
+        - fer_joint1/position
+        - fer_joint2/position
+        - fer_joint3/position
+        - fer_joint4/position
+        - fer_joint5/position
+        - fer_joint6/position
+        - fer_joint7/position
+      velocity:
+        - fer_joint1/velocity
+        - fer_joint2/velocity
+        - fer_joint3/velocity
+        - fer_joint4/velocity
+        - fer_joint5/velocity
+        - fer_joint6/velocity
+        - fer_joint7/velocity
+
+    command_interfaces_names_override:
+      effort:
+        - fer_joint1/effort
+        - fer_joint2/effort
+        - fer_joint3/effort
+        - fer_joint4/effort
+        - fer_joint5/effort
+        - fer_joint6/effort
+        - fer_joint7/effort
+
+    dynamics_solver:
+      dynamics_solver_plugin: kdl_inverse_dynamics_solver/InverseDynamicsSolverKDL
+      root: fer_link0
+      tip: fer_link8
+
+    p_gains: [500.0, 400.0, 400.0, 300.0, 20.0, 20.0, 10.0]
+    d_gains: [50.0, 40.0, 40.0, 5.0, 2.0, 2.0, 1.0]
+
+    compensate_gravity: false

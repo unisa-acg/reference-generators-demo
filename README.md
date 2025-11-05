@@ -1,23 +1,8 @@
 # Reference Generators and Repository Overview
 
-This repository provides reference generators components and demos for ROS2 Humble.
-Reference generators allow to decouple reference management from control law computation, enabling more flexible, modular, and reusable control systems.
-They can handle both online references (received in real time via topics or action servers) and trajectories, and may include features such as interpolation or trajectory execution logic.
+This is the accompanying code of the paper
 
-For more details about the design, configuration, and usage of reference generators, please refer to the dedicated documentation in the [`reference_generator` package](./reference_generator/README.md).
-
-## What this repository contains
-
-This repository contains a joint space reference generator and a task space reference generator, along with their configurations and example usage.
-In particular:
-
-- [`reference_generator`](./reference_generator/README.md): contains all reference generator components.
-- [`acg_common_libraries`](./acg_common_libraries/README.md): contains common libraries used by the reference generators and controllers.
-- [`acg_common_msgs`](./acg_common_msgs/README.md): contains custom messages used by the reference generators and controllers.
-- [`acg_controller_interface`](./acg_controller_interface/README.md): contains custom semantic components and semantic command components used by the reference generators.
-- [`acg_hardware_interface_facade`](./acg_hardware_interface_facade/README.md): contains a series of components that facilitate the interaction with the hardware interface,which are used by both controllers and reference generators.
-- [`cartesian_pose_controller`](./cartesian_pose_controller/README.md): contains a task space controller, that will be used in the demos.
-- [`ur10_reference_generators_demo`](./ur10_reference_generators_demo/README.md): contains a demo that shows how to use both reference generators with a UR10 robot.
+> D. Risi, V. Petrone, A. Langella, L. Petrone, E. Ferrentino, P. Chiacchio, "Simplifying ROS2 controllers with a modular architecture for robot-agnostic reference generation". Under peer-review.
 
 ## Dependencies
 
@@ -30,5 +15,31 @@ To install the packages needed by this repo as system-wide dependencies, run the
 ```bash
 rosdep install --from-paths . -i
 ```
+
+## Demonstration
+
+### JRG + PD with gravity compensation + simulated FER.
+
+First, build the workspace and source the setup file.
+From the workspace root folder, run:
+
+```bash
+colcon build --packages-up-to fer_gravity_compensation_pd_controller_demo
+source install/setup.bash
+```
+
+Launch the simulation using the provided launch file:
+
+```bash
+ros2 launch fer_gravity_compensation_pd_controller_demo gravity_compensation_pd_controller_gazebo_demo.launch.py
+```
+
+Then, in a new terminal, source the setup file again and run the following command to start sending joint space references to the controller:
+
+```bash
+source install/setup.bash
+ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_acg_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
+```
+
 
 &copy; *2025 Automatic Control Group (DIEM, University of Salerno)*

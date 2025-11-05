@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Gazebo FTS plugin">
+  <xacro:macro name="gazebo_ft_sensor" params="number_of_samples_for_computing_bias stable_readings_tolerance:=1e-6">
+    <ros2_control name="gazebo_force_torque_sensor" type="system">
+      <hardware>
+        <plugin>gz_ros2_control/GazeboFTSensor</plugin>
+        <param name="number_of_samples_for_computing_bias">${number_of_samples_for_computing_bias}</param>
+        <param name="stable_readings_tolerance">${stable_readings_tolerance}</param>
+      </hardware>
+
+      <sensor name="gazebo_force_torque_sensor">
+        <state_interface name="force.x"/>
+        <state_interface name="force.y"/>
+        <state_interface name="force.z"/>
+        <state_interface name="torque.x"/>
+        <state_interface name="torque.y"/>
+        <state_interface name="torque.z"/>
+      </sensor>
+    </ros2_control>
+  </xacro:macro>
+</robot>

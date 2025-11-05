@@ -73,7 +73,7 @@ controller_interface::CallbackReturn CartesianPoseController::on_init()
   }
 
   // Initializing internal variables from the configuration file
-  task_space_reference_frame_ = parameter_handler_->get_params().root_link_frame;
+  task_space_reference_frame_ = parameter_handler_->get_params().kinematics.base;
   tip_link_ = parameter_handler_->get_params().kinematics.tip;
 
   if (robot_description.find(task_space_reference_frame_) == std::string::npos)
@@ -337,7 +337,7 @@ controller_interface::return_type CartesianPoseController::update_and_write_comm
 bool CartesianPoseController::compute_control_law_(const rclcpp::Duration& period)
 {
   geometry_msgs::msg::Pose task_space_robot_state;
-  robot_kinematics_.compute_forward_kinematics(joint_space_command_.positions, tip_link_, task_space_reference_frame_, task_space_robot_state);
+  robot_kinematics_.compute_forward_kinematics(robot_joint_state_.positions, tip_link_, task_space_reference_frame_, task_space_robot_state);
 
   Vector6d pose_error;
   acg_kinematics::compute_pose_error(task_space_reference_.pose, task_space_robot_state, pose_error);
@@ -357,11 +357,11 @@ bool CartesianPoseController::compute_control_law_(const rclcpp::Duration& perio
   }
 
   // Convert the joint space command positions to an Eigen vector
-  const Eigen::VectorXd eigen_joint_command_positions =
-      Eigen::Map<const Eigen::VectorXd>(joint_space_command_.positions.data(), joint_space_command_.positions.size());
+  const Eigen::VectorXd eigen_joint_state_positions =
+      Eigen::Map<const Eigen::VectorXd>(robot_joint_state_.positions.data(), robot_joint_state_.positions.size());
 
   // Computing the joint velocities through the damped least squares inverse Jacobian
-  kinematics_->convert_cartesian_deltas_to_joint_deltas(eigen_joint_command_positions, K_matrix_ * pose_error + desired_twist, tip_link_,
+  kinematics_->convert_cartesian_deltas_to_joint_deltas(eigen_joint_state_positions, K_matrix_ * pose_error + desired_twist, tip_link_,
                                                         eigen_joint_command_velocities_);
 
   // If the controller writes the velocities to the command interfaces, values are clamped to the joint velocity limits

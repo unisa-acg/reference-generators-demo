@@ -8,7 +8,7 @@
  * Org.:    UNISA
  * Date:    Mar 4, 2025
  *
- * This class contains utility functions for managing the properties
+ * This library contains utility functions for managing the properties
  * of the URDF.
  *
  * -------------------------------------------------------------------

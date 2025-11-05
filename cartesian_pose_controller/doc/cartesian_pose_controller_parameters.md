@@ -15,6 +15,7 @@ cartesian_pose_controller:
     joints: ''
     k_matrix_gains: '{10.0, 10.0, 10.0, 10.0, 10.0, 10.0}'
     kinematics:
+      base: world
       plugin_name: ''
       plugin_package: ''
       tip: ''
@@ -22,7 +23,6 @@ cartesian_pose_controller:
       task_space_pose: '{}'
       task_space_twist: '{}'
     robot_name: ''
-    root_link_frame: world
     state_interfaces_names_override:
       position: '{}'
     use_twist_reference: false
@@ -140,11 +140,13 @@ Specifies the package name that contains the kinematics plugin.
 
 
 
-## kinematics.tip
+## kinematics.base
 
-Specifies the end effector link of the robot description used by the kinematics plugin.
+Specifies the base link frame. This frame is used as the reference frame for the task space references received by the controller. Note that this parameter must match the root link described in the robot description, as the kinematics interface library assumes this frame as the reference for its calculations.
 
 * Type: `string`
+* Default Value: "world"
+* Read only: True
 
 *Constraints:*
  - parameter is not empty
@@ -153,13 +155,11 @@ Specifies the end effector link of the robot description used by the kinematics 
 
 
 
-## root_link_frame
+## kinematics.tip
 
-Specifies the root link frame. This frame is used as the reference frame for the task space references received by the controller. Note that this parameter must match the root link, as the kinematics interface assumes this.
+Specifies the end effector link of the robot description used by the kinematics plugin.
 
 * Type: `string`
-* Default Value: "world"
-* Read only: True
 
 *Constraints:*
  - parameter is not empty

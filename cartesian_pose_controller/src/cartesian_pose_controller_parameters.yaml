@@ -80,6 +80,15 @@ cartesian_pose_controller:
         not_empty<>: null
       }
     }
+    base: {
+      type: string,
+      description: "Specifies the base link frame. This frame is used as the reference frame for the task space references received by the controller. Note that this parameter must match the root link described in the robot description, as the kinematics interface library assumes this frame as the reference for its calculations.",
+      default_value: "world",
+      read_only: true,
+      validation: {
+        not_empty<>: null
+      }
+    }
     tip: {
       type: string,
       description: "Specifies the end effector link of the robot description used by the kinematics plugin.",
@@ -87,15 +96,6 @@ cartesian_pose_controller:
         not_empty<>: null
       }
     }
-  root_link_frame: {
-    type: string,
-    description: "Specifies the root link frame. This frame is used as the reference frame for the task space references received by the controller. Note that this parameter must match the root link, as the kinematics interface assumes this.",
-    default_value: "world",
-    read_only: true,
-    validation: {
-      not_empty<>: null
-    }
-  }
   k_matrix_gains: {
     type: double_array,
     default_value: [10.0, 10.0, 10.0, 10.0, 10.0, 10.0],

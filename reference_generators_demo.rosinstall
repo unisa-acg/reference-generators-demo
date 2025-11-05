@@ -1,0 +1,15 @@
+# This file is intended for users who want to build reference_generators_demo from source.
+# Used with wstool, users can download source of all dependencies
+- git:
+    local-name: rq_fts_ros2_driver
+    uri: git@github.com:unisa-acg/rq_fts_ros2_driver.git
+    version: main
+- git:
+    local-name: filters
+    uri: https://github.com/ros/filters.git
+    version: ros2
+- git:
+    local-name: franka_description
+    uri: git@github.com:unisa-acg/franka_description.git
+    version: feature/connected_to_arg
+
