@@ -46,134 +46,82 @@ rosdep install --from-paths . -i
 
 ## Demonstration
 
-### JRG + PD with gravity compensation + simulated FER.
+The following sections show how to run simulations in Gazebo using the proposed Joint Space Reference Generator (JRG) and Task Space Reference Generator (TRG) with four controllers—PD with gravity compensation, PID, CPC, and AC—on the Franka Emika Robot (FER) and UR10.
 
-First, build the workspace and source the setup file.
-From the workspace root folder, run:
-
+Before starting, compile from the workspace root folder:
 ```bash
-colcon build --packages-up-to fer_gravity_compensation_pd_controller_demo
+colcon build
 source install/setup.bash
 ```
 
-Launch the simulation using the provided launch file:
+Note: In each new terminal, run `source install/setup.bash` before executing any ROS2 commands.
 
+### JRG + PD with gravity compensation + simulated FER
+
+Launch the simulation, which starts FER with PD controller with gravity compensation, and the JRG:
 ```bash
 ros2 launch fer_gravity_compensation_pd_controller_demo gravity_compensation_pd_controller_gazebo_demo.launch.py
 ```
 
-Then, in a new terminal, source the setup file again and run the following command to start sending joint space references to the controller:
-
+In a new terminal, send the joint space trajectory:
 ```bash
-source install/setup.bash
 ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_acg_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ### JRG + PID + simulated FER
 
-First, build the workspace and source the setup file.
-From the workspace root folder, run:
-
-```bash
-colcon build --packages-up-to acg_resources_fer_moveit_config
-colcon build --packages-up-to follow_joint_trajectory_action_client
-source install/setup.bash
-```
-
-Launch the simulation using the provided launch file:
-
+Launch the simulation, which starts FER with PID controller:
 ```bash
 ros2 launch acg_resources_fer_moveit_config gazebo_ros2_control_demo.launch.py hand:=false controller:=pid_controller enable_effort_interfaces:=true controllers_file:=fer_reference_generator.yaml
 ```
 
-Then, load and activate the `joint_space_command_controller` by running the following commands:
-
+Then, load and activate the `joint_space_command_controller`, for example using the GUI:
 ```bash
 ros2 run rqt_controller_manager rqt_controller_manager
 ```
 
-Finally, send the excitation trajectory with the following command:
-
+In a new terminal, send the joint space trajectory:
 ```bash
-source install/setup.bash
 ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_acg_trajectory_42_real action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ### JRG + PID + simulated UR10
 
-First, build the workspace and source the setup file.
-From the workspace root folder, run:
-
-```bash
-colcon build --packages-up-to acg_resources_ur10_moveit_config
-colcon build --packages-up-to follow_joint_trajectory_action_client
-source install/setup.bash
-```
-
-Launch the simulation using the provided launch file:
-
+Launch the simulation, which starts UR10 with PID controller:
 ```bash
 ros2 launch acg_resources_ur10_moveit_config gazebo_ros2_control_demo.launch.py controllers_file:=ur10_test_reference_controllers.yaml rviz_config_file:=config/joint_space_reference_generator_view_ee_pose.rviz initial_joint_controller:=pid_controller
 ```
 
-Then, load and activate the `joint_space_command_controller` by running the following commands:
-
+Then, load and activate `joint_space_command_controller`, for example using the GUI:
 ```bash
 ros2 run rqt_controller_manager rqt_controller_manager
 ```
 
-Finally, send the excitation trajectory with the following command:
-
+In a new terminal, send the joint space trajectory:
 ```bash
-source install/setup.bash
 ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=ur10_excitation_trajectory action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ### TRG + CPC + simulated UR10
 
-First, build the workspace and source the setup file.
-From the workspace root folder, run:
-
-```bash
-colcon build --packages-up-to ur10_cartesian_controller_demo
-colcon build --packages-up-to follow_task_trajectory_action_client
-source install/setup.bash
-```
-
-Launch the simulation using the provided launch file, which will start the UR10 with the CPC and TRG controllers:
-
+Launch the simulation, which starts UR10 with CPC and TRG:
 ```bash
 ros2 launch ur10_cartesian_controller_demo cartesian_controller_gazebo_demo.launch.py
 ```
 
-Then, send the trajectory to the `task_space_reference_generator` controller using the command:
-
+In a new terminal, send task-space trajectory:
 ```bash
-source install/setup.bash
 ros2 launch follow_task_trajectory_action_client follow_task_trajectory_action_client.launch.py input_trajectory_filename:=ur10_squared_trajectory action_name:=task_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ### TRG + AC + CPC + simulated UR10
 
-First, build the workspace and source the setup file.
-From the workspace root folder, run:
-
-```bash
-colcon build --packages-up-to ur10_admittance_controller_demo
-colcon build --packages-up-to follow_task_trajectory_action_client
-source install/setup.bash
-```
-
-Launch the simulation using the provided launch file, which will start the UR10 with the CPC, AC, and TRG controllers:
-
+Launch the simulation, which starts UR10 with CPC, AC, and TRG:
 ```bash
 ros2 launch ur10_admittance_controller_demo admittance_controller_gazebo_demo.launch.py
 ```
-
-Then, send the trajectory to the `task_space_reference_generator` controller using the command:
-
+In a new terminal, send task-space trajectory:
 ```bash
-source install/setup.bash
 ros2 launch follow_task_trajectory_action_client follow_task_trajectory_action_client.launch.py input_trajectory_filename:=wall_sliding_trajectory action_name:=task_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
