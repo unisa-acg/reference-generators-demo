@@ -22,7 +22,7 @@ git checkout rap
 To populate the workspace with the package suite and its dependencies, under your workspace's `src` folder, run:
 
 ```bash
-wstool init . `reference-generators-demo/reference_generators_demo.rosinstall
+wstool init . reference-generators-demo/reference_generators_demo.rosinstall
 ```
 
 **Note**: if a workspace config file `.rosinstall` has been already added to the workspace, update such file with the new dependencies and install them by running:
@@ -99,7 +99,7 @@ ros2 run rqt_controller_manager rqt_controller_manager
 
 In a new terminal, send the joint space trajectory:
 ```bash
-ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=ur10_excitation_trajectory action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
+ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=ur10_validation_trajectory action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ### TRG + CPC + simulated UR10

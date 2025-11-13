@@ -48,7 +48,7 @@ pid_controller:
 
     command_interface: position
 
-    reference_and_state_interfaces: ["position", "velocity"]
+    reference_and_state_interfaces: ["position"]
 
     gains:
       shoulder_pan_joint: {p: 50000.0, i: 0.0, d: 125.0, i_clamp_max: 0.0, i_clamp_min: 0.0}
@@ -120,7 +120,6 @@ joint_space_reference_generator:
     joint_space_command_controller: pid_controller
     joint_space_command_interfaces:
       - position
-      - velocity
 
     kinematics:
       plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL

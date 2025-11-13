@@ -1,0 +1,39 @@
+trajectory:
+  header:
+    stamp:
+      sec: 0
+      nanosec: 0
+    frame_id: 'base_link'
+  joint_names:
+    - shoulder_pan_joint
+    - shoulder_lift_joint
+    - elbow_joint
+    - wrist_1_joint
+    - wrist_2_joint
+    - wrist_3_joint
+  points:
+    - point:
+      positions: [0.0, -1.57, 0.0, -1.57, 0.0, 0.0]
+      time_from_start:
+        sec: 0
+        nanosec: 0
+    - point:
+        positions: [0.7, -1.3, 0.3, -1.2, -0.3, 0.0]
+        time_from_start:
+          sec: 3
+          nanosec: 0
+    - point:
+        positions: [1.57, -1.0, 0.7, -1.4, -0.8, 0.0]
+        time_from_start:
+          sec: 6
+          nanosec: 0
+    - point:
+        positions: [0.7, -1.3, 0.3, -1.2, -0.3, 0.0]
+        time_from_start:
+          sec: 9
+          nanosec: 0
+    - point:
+        positions: [0.0, -1.57, 0.0, -1.57, 0.0, 0.0]
+        time_from_start:
+          sec: 12
+          nanosec: 0
