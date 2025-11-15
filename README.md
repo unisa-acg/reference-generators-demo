@@ -114,11 +114,11 @@ In a new terminal, send task-space trajectory:
 ros2 launch follow_task_trajectory_action_client follow_task_trajectory_action_client.launch.py input_trajectory_filename:=ur10_squared_trajectory action_name:=task_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
-### TRG + AC + CPC + simulated UR10
+### TRG + AC + CPC + PID + simulated UR10
 
 Launch the simulation, which starts UR10 with CPC, AC, and TRG:
 ```bash
-ros2 launch ur10_admittance_controller_demo admittance_controller_gazebo_demo.launch.py
+ros2 launch ur10_admittance_controller_demo admittance_controller_gazebo_demo.launch.py enable_effort_interfaces:=true
 ```
 In a new terminal, send task-space trajectory:
 ```bash
