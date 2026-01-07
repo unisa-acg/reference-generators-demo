@@ -124,5 +124,3 @@ In a new terminal, send task-space trajectory:
 ```bash
 ros2 launch follow_task_trajectory_action_client follow_task_trajectory_action_client.launch.py input_trajectory_filename:=wall_sliding_trajectory action_name:=task_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
-
-&copy; *2025 Automatic Control Group (DIEM, University of Salerno)*
