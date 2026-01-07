@@ -14,14 +14,14 @@ if(CMAKE_COMPILER_IS_GNUCXX
 endif()
 
 set(CARTESIAN_POSE_CONTROLLER_INCLUDE_DEPENDS
-    acg_control_msgs
+    xxx_control_msgs
     controller_interface
     generate_parameter_library
     geometry_msgs
     pluginlib
     kinematics_interface
-    acg_hardware_interface_facade
-    acg_common_libraries
+    xxx_hardware_interface_facade
+    xxx_common_libraries
     rclcpp
 )
 

@@ -19,7 +19,7 @@ ros2 launch ur10_admittance_controller_demo admittance_controller_gazebo_demo.la
 To command the robot to follow a trajectory along the wall, run the following command:
 
 ```bash
-ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory acg_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/wall_sliding_trajectory.yaml)" --feedback
+ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory xxx_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/wall_sliding_trajectory.yaml)" --feedback
 ```
 
 To execute the same demo with the dynamic simulation, run the following command instead:
@@ -39,7 +39,7 @@ ros2 launch ur10_admittance_controller_demo admittance_controller_gazebo_demo.la
 To command the robot to follow a trajectory along the ramp, run the following command:
 
 ```bash
-ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory acg_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/ramp_sliding_trajectory.yaml)" --feedback
+ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory xxx_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/ramp_sliding_trajectory.yaml)" --feedback
 ```
 
 ## Working with the real robot
@@ -85,7 +85,7 @@ ros2 launch ur10_admittance_controller_demo admittance_controller_demo.launch.py
 To command the robot to follow a trajectory along the blackboard, run the following command:
 
 ```bash
-ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory acg_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/blackboard_sliding_trajectory.yaml)" --feedback
+ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory xxx_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_admittance_controller_demo)/config/blackboard_sliding_trajectory.yaml)" --feedback
 ```
 
 **Note:** this demo loads the parameter defined in [`ur10_admittance_controller_blackboard.yaml`](./config/ur10_admittance_controller_blackboard.yaml), tuned for a blackboard writing task.

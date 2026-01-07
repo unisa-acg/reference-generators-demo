@@ -14,8 +14,8 @@
  */
 
 #include <pluginlib/class_list_macros.hpp>
-#include <acg_common_libraries/message_utilities.hpp>
-#include <acg_common_libraries/urdf_utilities.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
+#include <xxx_common_libraries/urdf_utilities.hpp>
 
 #include "cartesian_pose_controller/cartesian_pose_controller.hpp"
 
@@ -117,7 +117,7 @@ controller_interface::CallbackReturn CartesianPoseController::on_init()
 
   // Initialize the K matrix with the gains from the parameter handler
   K_matrix_.setIdentity();
-  for (std::size_t i = 0; i < acg_kinematics::NUM_CARTESIAN_DOF; i++)
+  for (std::size_t i = 0; i < xxx_kinematics::NUM_CARTESIAN_DOF; i++)
   {
     K_matrix_(i, i) = parameter_handler_->get_params().k_matrix_gains[i];
   }
@@ -148,7 +148,7 @@ controller_interface::CallbackReturn CartesianPoseController::on_configure(const
   std::vector<std::string> state_interfaces_names;
   state_interfaces_names.emplace_back("position");
 
-  acg_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
+  xxx_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
   state_interfaces_names_override.position_state_interfaces = parameter_handler_->get_params().state_interfaces_names_override.position;
 
   state_reader_.configure_state_interfaces(state_interfaces_names, parameter_handler_->get_params().joints,
@@ -158,7 +158,7 @@ controller_interface::CallbackReturn CartesianPoseController::on_configure(const
   std::vector<std::string> command_interface_names = parameter_handler_->get_params().command_interfaces;
 
   // Setting the command interface names override struct based on the configuration file for the command interfaces
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
   command_interface_names_override.joint_position_interface_names = parameter_handler_->get_params().command_interfaces_names_override.joint_position;
   command_interface_names_override.joint_velocity_interface_names = parameter_handler_->get_params().command_interfaces_names_override.joint_velocity;
 
@@ -170,7 +170,7 @@ controller_interface::CallbackReturn CartesianPoseController::on_configure(const
   reference_interfaces.emplace_back("pose");
 
   // Setting the command interface names override struct based on the configuration file for the reference interfaces
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interface_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interface_names_override;
   reference_interface_names_override.task_space_pose_interface_names =
       parameter_handler_->get_params().reference_interfaces_names_override.task_space_pose;
   if (parameter_handler_->get_params().use_twist_reference)
@@ -296,7 +296,7 @@ controller_interface::return_type CartesianPoseController::update_and_write_comm
     {
       // Check if the task space reference is valid.
       // Note that the task space reference is not valid (contains NaN values) when the previous controller in the chain is not activated.
-      if (acg_message_utilities::is_nan(task_space_reference_.pose) || acg_message_utilities::is_nan(task_space_reference_.twist))
+      if (xxx_message_utilities::is_nan(task_space_reference_.pose) || xxx_message_utilities::is_nan(task_space_reference_.twist))
       {
         RCLCPP_WARN_THROTTLE(get_node()->get_logger(), *get_node()->get_clock(), DURATION_MS_,
                              "Task space reference is NaN. Using the last valid reference.");
@@ -340,7 +340,7 @@ bool CartesianPoseController::compute_control_law_(const rclcpp::Duration& perio
   robot_kinematics_.compute_forward_kinematics(robot_joint_state_.positions, tip_link_, task_space_reference_frame_, task_space_robot_state);
 
   Vector6d pose_error;
-  acg_kinematics::compute_pose_error(task_space_reference_.pose, task_space_robot_state, pose_error);
+  xxx_kinematics::compute_pose_error(task_space_reference_.pose, task_space_robot_state, pose_error);
 
   Vector6d desired_twist;
   if (reference_reader_.has_task_space_twist_interface())
@@ -352,7 +352,7 @@ bool CartesianPoseController::compute_control_law_(const rclcpp::Duration& perio
   {
     // Computing the desired twist from the last reference and the current reference
     Vector6d reference_diff;
-    acg_kinematics::compute_pose_error(task_space_reference_.pose, last_reference_.pose, reference_diff);
+    xxx_kinematics::compute_pose_error(task_space_reference_.pose, last_reference_.pose, reference_diff);
     desired_twist = reference_diff / period.seconds();
   }
 

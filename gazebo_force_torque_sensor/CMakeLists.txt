@@ -27,7 +27,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
     tf2
     tf2_eigen
     tf2_geometry_msgs
-    acg_common_libraries
+    xxx_common_libraries
 )
 
 foreach(dependency IN

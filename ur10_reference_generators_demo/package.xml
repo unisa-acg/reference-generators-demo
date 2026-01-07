@@ -10,7 +10,7 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>acg_control_msgs</exec_depend>
+  <exec_depend>xxx_control_msgs</exec_depend>
   <exec_depend>cartesian_pose_controller</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>gz_ros2_control</exec_depend>

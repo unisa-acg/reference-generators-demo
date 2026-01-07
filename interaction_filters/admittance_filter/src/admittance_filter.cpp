@@ -14,7 +14,7 @@
  */
 
 #include <pluginlib/class_list_macros.hpp>
-#include <acg_common_libraries/message_utilities.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
 #include "admittance_filter/admittance_filter.hpp"
 
 namespace interaction_filters
@@ -24,8 +24,8 @@ AdmittanceFilter::~AdmittanceFilter()
   reset();
 }
 
-bool AdmittanceFilter::update(const acg_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
-                              acg_control_msgs::msg::TaskSpacePoint& task_space_command)
+bool AdmittanceFilter::update(const xxx_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
+                              xxx_control_msgs::msg::TaskSpacePoint& task_space_command)
 {
   if (!is_initialized())
   {

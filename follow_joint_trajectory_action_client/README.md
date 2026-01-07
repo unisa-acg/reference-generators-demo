@@ -1,9 +1,9 @@
 # follow_joint_trajectory_action_client
 
-This package implements an Action Client over the [FollowJointTrajectory](../acg_control_msgs/action/FollowJointTrajectory.action) action.
+This package implements an Action Client over the [FollowJointTrajectory](../xxx_control_msgs/action/FollowJointTrajectory.action) action.
 It can be used with any Action Server that expects the same message.
 
-The trajectory to be sent as goal to the Action Server must be saved in a bag file, written in a [`JointTrajectory`](../acg_control_msgs/msg/JointTrajectory.msg) message.
+The trajectory to be sent as goal to the Action Server must be saved in a bag file, written in a [`JointTrajectory`](../xxx_control_msgs/msg/JointTrajectory.msg) message.
 During execution, feedback is recorded and stored in three separate trajectories representing the actual, desired, and error joint values. These three trajectories are written sequentially in the output bag file, in the following order:
 
 1. ACTUAL trajectory
@@ -34,10 +34,10 @@ colcon build --packages-up-to follow_joint_trajectory_action_client
 source install/setup.bash
 ```
 
-This demo build upon [`acg_resources_ur10_moveit_config`](../acg_resources_ur10_moveit_config/README.md), so build this one too:
+This demo build upon [`xxx_resources_ur10_moveit_config`](../xxx_resources_ur10_moveit_config/README.md), so build this one too:
 
 ```bash
-colcon build --packages-up-to acg_resources_ur10_moveit_config
+colcon build --packages-up-to xxx_resources_ur10_moveit_config
 source install/setup.bash
 ```
 
@@ -48,7 +48,7 @@ To test the action client and server setup, follow these steps:
    For example, to launch the UR10 MoveIt Gazebo demo with a mock controller:
 
    ```bash
-   ros2 launch acg_resources_ur10_moveit_config gazebo_ros2_control_demo.launch.py controllers_file:=ur10_test_reference_controllers.yaml rviz_config_file:=config/joint_space_reference_generator_view_ee_pose.rviz initial_joint_controller:=pid_controller
+   ros2 launch xxx_resources_ur10_moveit_config gazebo_ros2_control_demo.launch.py controllers_file:=ur10_test_reference_controllers.yaml rviz_config_file:=config/joint_space_reference_generator_view_ee_pose.rviz initial_joint_controller:=pid_controller
    ```
 
 2. **Load/Activate the Controller (if not already active):**
@@ -72,5 +72,5 @@ To test the action client and server setup, follow these steps:
 
 ### Other trajectories
 
-The [`fer_exciting_acg_trajectory_42_real`](./trajectories/fer_exciting_acg_trajectory_42_real/fer_exciting_acg_trajectory_42_real_0.db3) trajectory has been designed for the [FER robot](../acg_resources_fer_moveit_config/README.md), but a demo with a controller accepting it is currently under development.
+The [`fer_exciting_xxx_trajectory_42_real`](./trajectories/fer_exciting_xxx_trajectory_42_real/fer_exciting_xxx_trajectory_42_real_0.db3) trajectory has been designed for the [FER robot](../xxx_resources_fer_moveit_config/README.md), but a demo with a controller accepting it is currently under development.
 Please consider it for future uses.

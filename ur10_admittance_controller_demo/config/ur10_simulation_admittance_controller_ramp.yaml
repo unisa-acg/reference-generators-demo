@@ -14,7 +14,7 @@ controller_manager:
       type: task_space_reference_generator/TaskSpaceReferenceGenerator
 
     admittance_controller:
-      type: acg_admittance_controller/AdmittanceController
+      type: xxx_admittance_controller/AdmittanceController
 
     cartesian_pose_controller:
       type: cartesian_pose_controller/CartesianPoseController

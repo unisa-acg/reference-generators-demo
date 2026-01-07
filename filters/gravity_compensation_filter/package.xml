@@ -11,13 +11,13 @@
 
   <buildtool_depend>gazebo_force_torque_sensor</buildtool_depend>
 
-  <depend>acg_common_libraries</depend>
+  <depend>xxx_common_libraries</depend>
   <depend>filters</depend>
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
   <depend>urdf</depend>
 
-  <test_depend>acg_resources_ur10_moveit_config</test_depend>
+  <test_depend>xxx_resources_ur10_moveit_config</test_depend>
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

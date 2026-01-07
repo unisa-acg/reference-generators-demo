@@ -20,7 +20,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
     rclcpp
     filters
     pluginlib
-    acg_common_libraries
+    xxx_common_libraries
     urdf
 )
 

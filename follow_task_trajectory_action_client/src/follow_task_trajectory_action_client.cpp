@@ -12,7 +12,7 @@
  * with an action server using the FollowTaskSpaceTrajectory action.
  * This way, the trajectory execution can be monitored and data logged
  * to bag file. The node opens a bag file with a task space trajectory
- * of type acg_control_msgs/TaskSpaceTrajectory, reads the trajectory
+ * of type xxx_control_msgs/TaskSpaceTrajectory, reads the trajectory
  * contained in it and sends it to the controller. Another bag file is
  * written containing the actual, desired and error trajectories.
  *
@@ -36,14 +36,14 @@
 #include <rosbag2_storage/serialized_bag_message.hpp>
 
 // Message
-#include <acg_control_msgs/msg/task_space_trajectory_point.hpp>
-#include <acg_control_msgs/action/follow_task_space_trajectory.hpp>
+#include <xxx_control_msgs/msg/task_space_trajectory_point.hpp>
+#include <xxx_control_msgs/action/follow_task_space_trajectory.hpp>
 
 namespace follow_task_trajectory_action_client_cpp
 {
 class FollowTaskTrajectoryActionClient : public rclcpp::Node
 {
-  using FollowTaskTrajectoryGoalHandle = typename rclcpp_action::ClientGoalHandle<acg_control_msgs::action::FollowTaskSpaceTrajectory>;
+  using FollowTaskTrajectoryGoalHandle = typename rclcpp_action::ClientGoalHandle<xxx_control_msgs::action::FollowTaskSpaceTrajectory>;
 
 public:
   explicit FollowTaskTrajectoryActionClient(const rclcpp::NodeOptions& options) : Node("follow_task_trajectory_action_client", options)
@@ -83,13 +83,13 @@ public:
     output_path_ = this->get_parameter("output_path").as_string();
 
     // Initialize the variables that will contain trajectories
-    input_trajectory_ = std::make_shared<acg_control_msgs::msg::TaskSpaceTrajectory>();
-    output_actual_trajectory_ = std::make_shared<acg_control_msgs::msg::TaskSpaceTrajectory>();
-    output_desired_trajectory_ = std::make_shared<acg_control_msgs::msg::TaskSpaceTrajectory>();
-    output_error_trajectory_ = std::make_shared<acg_control_msgs::msg::TaskSpaceTrajectory>();
+    input_trajectory_ = std::make_shared<xxx_control_msgs::msg::TaskSpaceTrajectory>();
+    output_actual_trajectory_ = std::make_shared<xxx_control_msgs::msg::TaskSpaceTrajectory>();
+    output_desired_trajectory_ = std::make_shared<xxx_control_msgs::msg::TaskSpaceTrajectory>();
+    output_error_trajectory_ = std::make_shared<xxx_control_msgs::msg::TaskSpaceTrajectory>();
 
     // Read the input trajectory from a bag file
-    rclcpp::Serialization<acg_control_msgs::msg::TaskSpaceTrajectory> serialization;
+    rclcpp::Serialization<xxx_control_msgs::msg::TaskSpaceTrajectory> serialization;
     rosbag2_cpp::Reader reader;
 
     reader.open(input_path);
@@ -120,7 +120,7 @@ public:
 
     // Creation of an action client
     client_ptr_ =
-        rclcpp_action::create_client<acg_control_msgs::action::FollowTaskSpaceTrajectory>(this, action_name + "/follow_task_space_trajectory");
+        rclcpp_action::create_client<xxx_control_msgs::action::FollowTaskSpaceTrajectory>(this, action_name + "/follow_task_space_trajectory");
 
     // Send the first trajectory point and afterwards send the whole trajectory
     if (send_first_trajectory_point())
@@ -143,7 +143,7 @@ public:
     }
 
     // Create a goal message containing only the first trajectory point
-    acg_control_msgs::action::FollowTaskSpaceTrajectory::Goal goal_msg;
+    xxx_control_msgs::action::FollowTaskSpaceTrajectory::Goal goal_msg;
     goal_msg.task_space_trajectory.points.push_back(input_trajectory_.get()->points[0]);
     goal_msg.task_space_trajectory.header = input_trajectory_.get()->header;
 
@@ -203,12 +203,12 @@ public:
     }
 
     // Create a goal message containing the whole trajectory
-    acg_control_msgs::action::FollowTaskSpaceTrajectory::Goal goal_msg;
+    xxx_control_msgs::action::FollowTaskSpaceTrajectory::Goal goal_msg;
     goal_msg.task_space_trajectory.points = input_trajectory_.get()->points;
     goal_msg.task_space_trajectory.header = input_trajectory_.get()->header;
 
     // Sending the goal to the action server
-    rclcpp_action::Client<acg_control_msgs::action::FollowTaskSpaceTrajectory>::SendGoalOptions send_goal_options;
+    rclcpp_action::Client<xxx_control_msgs::action::FollowTaskSpaceTrajectory>::SendGoalOptions send_goal_options;
     send_goal_options.goal_response_callback = std::bind(&FollowTaskTrajectoryActionClient::goal_response_callback, this, std::placeholders::_1);
     send_goal_options.feedback_callback =
         std::bind(&FollowTaskTrajectoryActionClient::feedback_callback, this, std::placeholders::_1, std::placeholders::_2);
@@ -217,8 +217,8 @@ public:
   }
 
 private:
-  rclcpp_action::Client<acg_control_msgs::action::FollowTaskSpaceTrajectory>::SharedPtr client_ptr_;
-  acg_control_msgs::msg::TaskSpaceTrajectory::SharedPtr input_trajectory_, output_actual_trajectory_, output_desired_trajectory_,
+  rclcpp_action::Client<xxx_control_msgs::action::FollowTaskSpaceTrajectory>::SharedPtr client_ptr_;
+  xxx_control_msgs::msg::TaskSpaceTrajectory::SharedPtr input_trajectory_, output_actual_trajectory_, output_desired_trajectory_,
       output_error_trajectory_;
   int fraction_feedback_messages_to_save_{ 0 }, number_feedback_messages_received_{ 0 };
   builtin_interfaces::msg::Time controller_first_time_;
@@ -237,7 +237,7 @@ private:
   }
 
   void feedback_callback(FollowTaskTrajectoryGoalHandle::SharedPtr,
-                         acg_control_msgs::action::FollowTaskSpaceTrajectory::Feedback::ConstSharedPtr feedback)
+                         xxx_control_msgs::action::FollowTaskSpaceTrajectory::Feedback::ConstSharedPtr feedback)
   {
     // Set controller_first_time_ on the first received feedback message
     if (number_feedback_messages_received_ == 0)
@@ -288,7 +288,7 @@ private:
 
         // Serialize the messages
         rclcpp::SerializedMessage serialized_output_actual_trajectory, serialized_output_desired_trajectory, serialized_output_error_trajectory;
-        rclcpp::Serialization<acg_control_msgs::msg::TaskSpaceTrajectory> serialization;
+        rclcpp::Serialization<xxx_control_msgs::msg::TaskSpaceTrajectory> serialization;
         serialization.serialize_message(output_actual_trajectory_.get(), &serialized_output_actual_trajectory);
         serialization.serialize_message(output_desired_trajectory_.get(), &serialized_output_desired_trajectory);
         serialization.serialize_message(output_error_trajectory_.get(), &serialized_output_error_trajectory);
@@ -310,7 +310,7 @@ private:
         // Topic creation on the bag file
         rosbag2_storage::TopicMetadata tm;
         tm.name = "/follow_workspace_trajectory_result";
-        tm.type = "acg_control_msgs/msg/TaskSpaceTrajectory";
+        tm.type = "xxx_control_msgs/msg/TaskSpaceTrajectory";
         tm.serialization_format = "cdr";
         writer.create_topic(tm);
 

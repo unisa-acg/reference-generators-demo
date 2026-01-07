@@ -26,12 +26,12 @@
 #include <filters/filter_chain.hpp>
 #include <kinematics_interface/kinematics_interface.hpp>
 
-#include <acg_control_msgs/msg/task_space_point.hpp>
-#include <acg_common_libraries/kinematics.hpp>
-#include <acg_hardware_interface_facade/command_writer.hpp>
-#include <acg_hardware_interface_facade/reference_reader.hpp>
-#include <acg_hardware_interface_facade/state_reader.hpp>
-#include <acg_hardware_interface_facade/force_torque_sensor_reader.hpp>
+#include <xxx_control_msgs/msg/task_space_point.hpp>
+#include <xxx_common_libraries/kinematics.hpp>
+#include <xxx_hardware_interface_facade/command_writer.hpp>
+#include <xxx_hardware_interface_facade/reference_reader.hpp>
+#include <xxx_hardware_interface_facade/state_reader.hpp>
+#include <xxx_hardware_interface_facade/force_torque_sensor_reader.hpp>
 #include <interaction_filter_base/interaction_filter_base.hpp>
 
 #include "motion_based_interaction_controller/motion_based_interaction_controller_parameters.hpp"
@@ -169,47 +169,47 @@ protected:
   /**
    * @brief Task space command that the controller sends to the robot.
    */
-  acg_control_msgs::msg::TaskSpacePoint task_space_command_;
+  xxx_control_msgs::msg::TaskSpacePoint task_space_command_;
 
   /**
    * @brief Previous task space command that the controller has sent to the robot.
    */
-  acg_control_msgs::msg::TaskSpacePoint previous_task_space_command_;
+  xxx_control_msgs::msg::TaskSpacePoint previous_task_space_command_;
 
   /**
    * @brief Task space reference that the controller should track.
    */
-  acg_control_msgs::msg::TaskSpacePoint task_space_reference_;
+  xxx_control_msgs::msg::TaskSpacePoint task_space_reference_;
 
   /**
    * @brief Robot state in the task space.
    */
-  acg_control_msgs::msg::TaskSpacePoint task_space_state_;
+  xxx_control_msgs::msg::TaskSpacePoint task_space_state_;
 
   /**
    * @brief Robot state in the joint space.
    */
-  acg_hardware_interface_facade::RobotJointState joint_space_state_;
+  xxx_hardware_interface_facade::RobotJointState joint_space_state_;
 
   /**
    * @brief Robot command writer.
    */
-  std::shared_ptr<acg_hardware_interface_facade::CommandWriter> command_writer_;
+  std::shared_ptr<xxx_hardware_interface_facade::CommandWriter> command_writer_;
 
   /**
    * @brief Robot state reader.
    */
-  std::shared_ptr<acg_hardware_interface_facade::StateReader> state_reader_;
+  std::shared_ptr<xxx_hardware_interface_facade::StateReader> state_reader_;
 
   /**
    * @brief Controller reference reader.
    */
-  std::shared_ptr<acg_hardware_interface_facade::ReferenceReader> reference_reader_;
+  std::shared_ptr<xxx_hardware_interface_facade::ReferenceReader> reference_reader_;
 
   /**
    * @brief Force/torque sensor reader.
    */
-  std::shared_ptr<acg_hardware_interface_facade::ForceTorqueSensorReader> force_torque_sensor_reader_;
+  std::shared_ptr<xxx_hardware_interface_facade::ForceTorqueSensorReader> force_torque_sensor_reader_;
 
   /**
    * @brief The name of the frame in which the task space reference, state, and command are expressed.
@@ -249,7 +249,7 @@ protected:
   /**
    * @brief Kinematics utilities object.
    */
-  std::shared_ptr<acg_kinematics::RTKinematicsSolver> robot_kinematics_;
+  std::shared_ptr<xxx_kinematics::RTKinematicsSolver> robot_kinematics_;
 
   /**
    * @brief Filter chain for the force/torque measurements.

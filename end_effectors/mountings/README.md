@@ -18,8 +18,8 @@ The `.urdf.xacro` file must define a xacro macro named `build_mounting` that gen
 * `config`: a dictionary containing the configuration parameters of the mounting provided by the user.
   The provided configuration parameters should be used to generate the URDF description of the mounting.
   A configuration parameter can be either mandatory or optional (i.e. it has a default value).
-  To read the value of a configuration parameter, the [`define_property_from_dict`](../../acg_common_libraries/xacro/define_property_from_dict.xacro) macro defined in the [`acg_common_libraries` package](../../acg_common_libraries/xacro/define_property_from_dict.xacro) can be used.
-  For more information on how to use this macro, please refer to the [`acg_common_libraries` package README](../../acg_common_libraries/README.md#using-the-define_property_from_dict-macro) or any of the existing mountings in this library.
+  To read the value of a configuration parameter, the [`define_property_from_dict`](../../xxx_common_libraries/xacro/define_property_from_dict.xacro) macro defined in the [`xxx_common_libraries` package](../../xxx_common_libraries/xacro/define_property_from_dict.xacro) can be used.
+  For more information on how to use this macro, please refer to the [`xxx_common_libraries` package README](../../xxx_common_libraries/README.md#using-the-define_property_from_dict-macro) or any of the existing mountings in this library.
 * `sim_ignition`: a boolean that indicates whether the mounting should be simulated in Ignition Gazebo.
   If `true`, gazebo-specific tags should be added to the URDF description of the mounting.
   This parameter should be captured by the parent xacro namespace with the `^` operator and have a default value of `false`.

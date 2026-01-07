@@ -1,6 +1,6 @@
 # follow_task_trajectory_action_client
 
-This package implements an Action Client over the [FollowTaskSpaceTrajectory](../acg_control_msgs/action/FollowTaskSpaceTrajectory.action) action.
+This package implements an Action Client over the [FollowTaskSpaceTrajectory](../xxx_control_msgs/action/FollowTaskSpaceTrajectory.action) action.
 It can be used with any Action Server that expects the same message.
 
 The trajectory to be sent as goal to the Action Server must be saved in a bag file.

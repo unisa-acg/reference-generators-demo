@@ -11,7 +11,7 @@
   <exec_depend>force_torque_sensor_broadcaster</exec_depend>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>acg_common_libraries</depend>
+  <depend>xxx_common_libraries</depend>
   <depend>geometry_msgs</depend>
   <depend>gz_ros2_control</depend>
   <depend>hardware_interface</depend>

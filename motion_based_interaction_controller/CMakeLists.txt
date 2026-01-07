@@ -17,9 +17,9 @@ endif()
 find_package(ament_cmake REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-    acg_common_libraries
-    acg_control_msgs
-    acg_hardware_interface_facade
+    xxx_common_libraries
+    xxx_control_msgs
+    xxx_hardware_interface_facade
     controller_interface
     Eigen3
     filters

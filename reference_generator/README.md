@@ -124,7 +124,7 @@ However, if this code is ported to a later ROS2 distribution, this parameter may
 
 ## Demo
 
-To test this controller in simulation please refer to the documentation of [`acg_resources_ur10_moveit_config`](../acg_resources_ur10_moveit_config/README.md#simulation-with-reference-generators).
+To test this controller in simulation please refer to the documentation of [`xxx_resources_ur10_moveit_config`](../xxx_resources_ur10_moveit_config/README.md#simulation-with-reference-generators).
 
 ## Requirements
 

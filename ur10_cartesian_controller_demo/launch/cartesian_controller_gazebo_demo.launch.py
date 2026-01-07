@@ -40,7 +40,7 @@ def launch_setup(context, *args, **kwargs):
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("acg_resources_ur10_moveit_config"),
+                    FindPackageShare("xxx_resources_ur10_moveit_config"),
                     "launch",
                     "gazebo_ros2_control_demo.launch.py",
                 ]
@@ -115,7 +115,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "rviz_config_package",
-            default_value="acg_resources_ur10_description",
+            default_value="xxx_resources_ur10_description",
             description="Package with the RViz configuration file.",
         )
     )

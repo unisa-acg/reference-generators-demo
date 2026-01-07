@@ -16,7 +16,7 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
-#include <acg_control_msgs/msg/task_space_point.hpp>
+#include <xxx_control_msgs/msg/task_space_point.hpp>
 
 namespace interaction_filters
 {
@@ -62,8 +62,8 @@ public:
    * @param[out] task_space_command Filter command.
    * @return True if update succeeds, false otherwise.
    */
-  virtual bool update(const acg_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
-                      acg_control_msgs::msg::TaskSpacePoint& task_space_command) = 0;
+  virtual bool update(const xxx_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
+                      xxx_control_msgs::msg::TaskSpacePoint& task_space_command) = 0;
 
   /**
    * @brief Reset the filter.

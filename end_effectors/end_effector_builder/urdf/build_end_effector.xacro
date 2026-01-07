@@ -11,7 +11,7 @@
     <xacro:property name="is_tool_mounting_present" value="${'tool_mounting' in ee_config}"/>
     <xacro:property name="is_tool_present" value="${'tool' in ee_config}"/>
 
-    <xacro:include filename="$(find acg_common_libraries)/xacro/define_property_from_dict.xacro"/>
+    <xacro:include filename="$(find xxx_common_libraries)/xacro/define_property_from_dict.xacro"/>
     <xacro:define_property_from_dict input_dict="${ee_config.get('force_torque_sensor', None)}" name="sensed_joint_name" default_value="ft_sensor_measure_joint"/>
     <xacro:define_property_from_dict input_dict="${ee_config.get('force_torque_sensor', None)}" name="sensing_frame_name" default_value="ft_sensing_frame"/>
 
@@ -59,9 +59,9 @@
       </xacro:unless>
 
       <xacro:if value="${sim_ignition}">
-        <xacro:include filename="$(find acg_resources_ft_sensor_gazebo_description)/urdf/gazebo_ft_sensor_description.xacro"/>
+        <xacro:include filename="$(find xxx_resources_ft_sensor_gazebo_description)/urdf/gazebo_ft_sensor_description.xacro"/>
         <xacro:gazebo_ft_sensor_description config="${ee_config.force_torque_sensor.get('gazebo_params', None)}" ft_sensed_joint="${sensed_joint_name}"/>
-        <xacro:include filename="$(find acg_resources_ft_sensor_gazebo_description)/urdf/gazebo_force_torque_sensor.ros2_control.xacro"/>
+        <xacro:include filename="$(find xxx_resources_ft_sensor_gazebo_description)/urdf/gazebo_force_torque_sensor.ros2_control.xacro"/>
         <xacro:build_ros2_control_description config="${ee_config.force_torque_sensor.get('ros2_control_params', None)}"/>
       </xacro:if>
 

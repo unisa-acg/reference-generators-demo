@@ -15,7 +15,7 @@
 
 #include <pluginlib/class_list_macros.hpp>
 
-#include <acg_common_libraries/urdf_utilities.hpp>
+#include <xxx_common_libraries/urdf_utilities.hpp>
 
 #include "gravity_compensation_pd_controller/gravity_compensation_pd_controller.hpp"
 
@@ -134,7 +134,7 @@ controller_interface::CallbackReturn GravityCompensationPDController::on_error(c
 controller_interface::CallbackReturn GravityCompensationPDController::on_configure(const rclcpp_lifecycle::State& /*previous_state*/)
 {
   gravity_compensation_pd_controller::Params params = parameter_handler_->get_params();
-  acg_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
+  xxx_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
   state_interfaces_names_override.position_state_interfaces = params.state_interfaces_names_override.position;
   state_interfaces_names_override.velocity_state_interfaces = params.state_interfaces_names_override.velocity;
 
@@ -148,7 +148,7 @@ controller_interface::CallbackReturn GravityCompensationPDController::on_configu
     return controller_interface::CallbackReturn::ERROR;
   }
 
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interfaces_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interfaces_names_override;
   command_interfaces_names_override.joint_effort_interface_names = params.command_interfaces_names_override.effort;
   const std::vector<std::string> COMMAND_INTERFACES{ "effort" };
   command_writer_.configure_interfaces(params.joints, COMMAND_INTERFACES, std::vector<std::string>(), params.robot_name, std::string(""),
@@ -160,7 +160,7 @@ controller_interface::CallbackReturn GravityCompensationPDController::on_configu
     return controller_interface::CallbackReturn::ERROR;
   }
 
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interfaces_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interfaces_names_override;
   reference_interfaces_names_override.joint_position_interface_names = params.reference_interfaces_names_override.joint_position;
   const std::vector<std::string> REFERENCE_INTERFACES{ "position" };
   reference_reader_.configure_interfaces(params.joints, REFERENCE_INTERFACES, std::vector<std::string>(), get_node()->get_name(), std::string(""),

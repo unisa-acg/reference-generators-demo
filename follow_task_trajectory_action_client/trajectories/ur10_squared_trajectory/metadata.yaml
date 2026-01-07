@@ -9,7 +9,7 @@ rosbag2_bagfile_information:
   topics_with_message_count:
     - topic_metadata:
         name: /task_space_trajectory
-        type: acg_control_msgs/msg/TaskSpaceTrajectory
+        type: xxx_control_msgs/msg/TaskSpaceTrajectory
         serialization_format: cdr
         offered_qos_profiles: ""
       message_count: 1

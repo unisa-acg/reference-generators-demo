@@ -19,9 +19,9 @@
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>  // for tf2::fromMsg
 
-#include <acg_common_libraries/diagnostics.hpp>
-#include <acg_common_libraries/interpolation.hpp>
-#include <acg_common_libraries/message_utilities.hpp>
+#include <xxx_common_libraries/diagnostics.hpp>
+#include <xxx_common_libraries/interpolation.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
 
 #include "reference_generator/task_space_reference_generator.hpp"
 namespace task_space_reference_generator
@@ -50,7 +50,7 @@ controller_interface::CallbackReturn TaskSpaceReferenceGenerator::on_init()
   }
 
   // Setting the command interface names override struct based on the configuration file
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
   command_interface_names_override.task_space_pose_interface_names =
       parameter_handler_->get_params().command_interfaces_names_override.task_space_pose;
   command_interface_names_override.task_space_twist_interface_names =
@@ -100,7 +100,7 @@ controller_interface::CallbackReturn TaskSpaceReferenceGenerator::on_configure(c
   robot_actual_task_space_state_.wrench_frame.reserve(ReferenceGenerator::STRING_INITIAL_CAPACITY_);
 
   // Configure the action server for the task space reference
-  task_space_trajectory_action_server_ = rclcpp_action::create_server<acg_control_msgs::action::FollowTaskSpaceTrajectory>(
+  task_space_trajectory_action_server_ = rclcpp_action::create_server<xxx_control_msgs::action::FollowTaskSpaceTrajectory>(
       get_node(), "~/follow_task_space_trajectory",
       std::bind(&TaskSpaceReferenceGenerator::handle_goal_, this, std::placeholders::_1, std::placeholders::_2),
       std::bind(&TaskSpaceReferenceGenerator::handle_cancel_, this, std::placeholders::_1),
@@ -111,7 +111,7 @@ controller_interface::CallbackReturn TaskSpaceReferenceGenerator::on_configure(c
   qos.reliability(rmw_qos_reliability_policy_t::RMW_QOS_POLICY_RELIABILITY_RELIABLE);
 
   // Configure the subscriber for the task space reference
-  task_space_reference_subscriber_ = get_node()->create_subscription<acg_control_msgs::msg::TaskSpacePoint>(
+  task_space_reference_subscriber_ = get_node()->create_subscription<xxx_control_msgs::msg::TaskSpacePoint>(
       "~/reference", qos, std::bind(&TaskSpaceReferenceGenerator::task_space_reference_callback_, this, std::placeholders::_1));
 
   return controller_interface::CallbackReturn::SUCCESS;
@@ -130,7 +130,7 @@ controller_interface::CallbackReturn TaskSpaceReferenceGenerator::on_activate(co
   command_writer_.assign_loaned_command_interfaces(ControllerInterfaceBase::command_interfaces_);
 
   // Clear the task space reference, so that the controller does not use the previous reference
-  acg_message_utilities::clear(task_space_reference_);
+  xxx_message_utilities::clear(task_space_reference_);
   task_space_reference_.motion_frame = ReferenceGenerator::task_space_reference_frame_;
   task_space_reference_.wrench_frame = ReferenceGenerator::wrench_reference_frame_;
 
@@ -162,7 +162,7 @@ controller_interface::CallbackReturn TaskSpaceReferenceGenerator::on_activate(co
   }
 
   // Write the task space reference in the task space real-time buffer
-  task_space_reference_buffer_.writeFromNonRT(std::make_shared<acg_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
+  task_space_reference_buffer_.writeFromNonRT(std::make_shared<xxx_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
 
   return controller_interface::CallbackReturn::SUCCESS;
 }
@@ -185,12 +185,12 @@ void TaskSpaceReferenceGenerator::abort_trajectory(const std::string& error_stri
 {
   if (trajectory_info_.goal_handle_)
   {
-    std::shared_ptr<acg_control_msgs::action::FollowTaskSpaceTrajectory_Result> result{
-      std::make_shared<acg_control_msgs::action::FollowTaskSpaceTrajectory::Result>()
+    std::shared_ptr<xxx_control_msgs::action::FollowTaskSpaceTrajectory_Result> result{
+      std::make_shared<xxx_control_msgs::action::FollowTaskSpaceTrajectory::Result>()
     };
-    result->error_code = acg_control_msgs::action::FollowTaskSpaceTrajectory::Result::TRAJECTORY_ABORTED;
+    result->error_code = xxx_control_msgs::action::FollowTaskSpaceTrajectory::Result::TRAJECTORY_ABORTED;
     result->error_string = error_string;
-    std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowTaskSpaceTrajectory>> goal_handle = trajectory_info_.goal_handle_;
+    std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowTaskSpaceTrajectory>> goal_handle = trajectory_info_.goal_handle_;
     goal_handle->abort(result);
     goal_handle.reset();
     trajectory_info_ = TaskSpaceTrajectoryInfo();
@@ -221,11 +221,11 @@ void TaskSpaceReferenceGenerator::calculate_and_publish_feedback(const rclcpp::T
   else
   {
     // The trajectory has not started yet, so the reference is set to NaN
-    acg_message_utilities::clear(feedback_->desired.point);
+    xxx_message_utilities::clear(feedback_->desired.point);
   }
 
   state_reader_.read_state_interfaces(robot_joint_state_);
-  acg_message_utilities::clear(robot_actual_task_space_state_);
+  xxx_message_utilities::clear(robot_actual_task_space_state_);
   robot_actual_task_space_state_.motion_frame = ReferenceGenerator::task_space_reference_frame_;
   robot_actual_task_space_state_.wrench_frame = ReferenceGenerator::wrench_reference_frame_;
   robot_kinematics_.compute_forward_kinematics(robot_joint_state_.positions, robot_joint_state_.velocities, ReferenceGenerator::tip_link_,
@@ -239,7 +239,7 @@ void TaskSpaceReferenceGenerator::calculate_and_publish_feedback(const rclcpp::T
 
 std::size_t TaskSpaceReferenceGenerator::get_next_trajectory_index()
 {
-  const acg_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
+  const xxx_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
   // Getting the index of the last trajectory waypoint
   std::size_t trajectory_index = trajectory_info_.trajectory_index_;
   // Getting the current time of the trajectory
@@ -257,7 +257,7 @@ std::size_t TaskSpaceReferenceGenerator::get_next_trajectory_index()
 
 bool TaskSpaceReferenceGenerator::update_next_reference_from_trajectory()
 {
-  const acg_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
+  const xxx_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
 
   current_traj_point_ = task_space_trajectory.points[trajectory_info_.trajectory_index_];
 
@@ -267,7 +267,7 @@ bool TaskSpaceReferenceGenerator::update_next_reference_from_trajectory()
   // Update the wrench and motion frame of the next point, if they are different from the desired ones
   try
   {
-    acg_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
+    xxx_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
                                                       ReferenceGenerator::wrench_reference_frame_, current_traj_point_.point);
   }
   catch (const std::runtime_error& e)
@@ -287,7 +287,7 @@ bool TaskSpaceReferenceGenerator::update_next_reference_from_trajectory()
     // Update the wrench and motion frame of the next point, if they are different from the desired ones
     try
     {
-      acg_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
+      xxx_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
                                                         ReferenceGenerator::wrench_reference_frame_, next_traj_point_.point);
     }
     catch (const std::runtime_error& e)
@@ -299,7 +299,7 @@ bool TaskSpaceReferenceGenerator::update_next_reference_from_trajectory()
     // Interpolate the task space reference between the current and next trajectory points
     try
     {
-      acg_interpolation::linearly_interpolate(current_traj_point_, next_traj_point_, trajectory_info_.current_time_.seconds(), task_space_reference_);
+      xxx_interpolation::linearly_interpolate(current_traj_point_, next_traj_point_, trajectory_info_.current_time_.seconds(), task_space_reference_);
     }
     catch (const std::runtime_error& e)
     {
@@ -312,12 +312,12 @@ bool TaskSpaceReferenceGenerator::update_next_reference_from_trajectory()
 
 void TaskSpaceReferenceGenerator::handle_trajectory_completed()
 {
-  const acg_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
+  const xxx_control_msgs::msg::TaskSpaceTrajectory& task_space_trajectory = trajectory_info_.goal_handle_->get_goal()->task_space_trajectory;
   if (trajectory_info_.trajectory_index_ == task_space_trajectory.points.size() - 1)
   {
-    std::shared_ptr<acg_control_msgs::action::FollowTaskSpaceTrajectory_Result> result =
-        std::make_shared<acg_control_msgs::action::FollowTaskSpaceTrajectory::Result>();
-    result->error_code = acg_control_msgs::action::FollowTaskSpaceTrajectory::Result::SUCCESSFUL;
+    std::shared_ptr<xxx_control_msgs::action::FollowTaskSpaceTrajectory_Result> result =
+        std::make_shared<xxx_control_msgs::action::FollowTaskSpaceTrajectory::Result>();
+    result->error_code = xxx_control_msgs::action::FollowTaskSpaceTrajectory::Result::SUCCESSFUL;
     trajectory_info_.goal_handle_->succeed(result);
 
     trajectory_info_.goal_handle_.reset();
@@ -335,7 +335,7 @@ void TaskSpaceReferenceGenerator::publish_reference_pose(const rclcpp::Time& tim
   if (is_publish_desired_)
   {
     periodic_reference_publisher_->publish(
-        acg_message_utilities::build_pose_stamped_msg(task_space_reference_.pose, ReferenceGenerator::task_space_reference_frame_, time), time);
+        xxx_message_utilities::build_pose_stamped_msg(task_space_reference_.pose, ReferenceGenerator::task_space_reference_frame_, time), time);
   }
 }
 
@@ -346,7 +346,7 @@ void TaskSpaceReferenceGenerator::read_trajectory_info_from_non_rt()
 }
 
 rclcpp_action::GoalResponse TaskSpaceReferenceGenerator::handle_goal_(
-    const rclcpp_action::GoalUUID& /* uuid */, std::shared_ptr<const acg_control_msgs::action::FollowTaskSpaceTrajectory::Goal> goal)
+    const rclcpp_action::GoalUUID& /* uuid */, std::shared_ptr<const xxx_control_msgs::action::FollowTaskSpaceTrajectory::Goal> goal)
 {
   if (goal->task_space_trajectory.points.empty())
   {
@@ -424,7 +424,7 @@ rclcpp_action::GoalResponse TaskSpaceReferenceGenerator::handle_goal_(
 }
 
 rclcpp_action::CancelResponse TaskSpaceReferenceGenerator::handle_cancel_(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowTaskSpaceTrajectory>> /* goal_handle */)
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowTaskSpaceTrajectory>> /* goal_handle */)
 {
   RCLCPP_INFO(get_node()->get_logger(), "Received request to cancel task space trajectory goal");
 
@@ -433,7 +433,7 @@ rclcpp_action::CancelResponse TaskSpaceReferenceGenerator::handle_cancel_(
 }
 
 void TaskSpaceReferenceGenerator::handle_accepted_(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowTaskSpaceTrajectory>> goal_handle)
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowTaskSpaceTrajectory>> goal_handle)
 {
   RCLCPP_INFO(get_node()->get_logger(), "Received request to execute task space trajectory goal");
   // Create a new trajectory info object and store the goal handle
@@ -447,7 +447,7 @@ void TaskSpaceReferenceGenerator::handle_accepted_(
   trigger_trajectory_accepted_event();
 }
 
-void TaskSpaceReferenceGenerator::task_space_reference_callback_(const std::shared_ptr<acg_control_msgs::msg::TaskSpacePoint> msg)
+void TaskSpaceReferenceGenerator::task_space_reference_callback_(const std::shared_ptr<xxx_control_msgs::msg::TaskSpacePoint> msg)
 {
   RCLCPP_INFO(get_node()->get_logger(), "New task space reference received");
 
@@ -478,7 +478,7 @@ void TaskSpaceReferenceGenerator::task_space_reference_callback_(const std::shar
   // convert the task space point just received from the reference motion and wrench frame (the ones contained in the msg) to the desired ones (the
   // ones set in the configuration file of the reference_generator)
   state_reader_.read_state_interfaces(robot_joint_state_);
-  acg_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
+  xxx_kinematics::transform_task_space_point_frames(*kinematics_, robot_joint_state_.positions, ReferenceGenerator::task_space_reference_frame_,
                                                     ReferenceGenerator::wrench_reference_frame_, *msg);
 
   task_space_reference_buffer_.writeFromNonRT(msg);
@@ -486,10 +486,10 @@ void TaskSpaceReferenceGenerator::task_space_reference_callback_(const std::shar
   trigger_publish_on_topic_event();
 }
 
-acg_control_msgs::msg::TaskSpacePoint
-TaskSpaceReferenceGenerator::compute_task_space_error_(const std::shared_ptr<acg_control_msgs::action::FollowTaskSpaceTrajectory::Feedback>& feedback)
+xxx_control_msgs::msg::TaskSpacePoint
+TaskSpaceReferenceGenerator::compute_task_space_error_(const std::shared_ptr<xxx_control_msgs::action::FollowTaskSpaceTrajectory::Feedback>& feedback)
 {
-  acg_control_msgs::msg::TaskSpacePoint error;
+  xxx_control_msgs::msg::TaskSpacePoint error;
   error.pose.position.x = feedback->actual.point.pose.position.x - feedback->desired.point.pose.position.x;
   error.pose.position.y = feedback->actual.point.pose.position.y - feedback->desired.point.pose.position.y;
   error.pose.position.z = feedback->actual.point.pose.position.z - feedback->desired.point.pose.position.z;

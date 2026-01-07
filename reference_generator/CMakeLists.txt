@@ -22,8 +22,8 @@ set(REFERENCE_GENERATOR_INCLUDE_DEPENDS
     pluginlib
     kinematics_interface
     realtime_tools
-    acg_hardware_interface_facade
-    acg_common_libraries
+    xxx_hardware_interface_facade
+    xxx_common_libraries
 )
 
 set(JOINT_SPACE_REFERENCE_GENERATOR_INCLUDE_DEPENDS
@@ -31,10 +31,10 @@ set(JOINT_SPACE_REFERENCE_GENERATOR_INCLUDE_DEPENDS
     kinematics_interface
     pluginlib
     realtime_tools
-    acg_control_msgs
+    xxx_control_msgs
     rclcpp_action
-    acg_hardware_interface_facade
-    acg_common_libraries
+    xxx_hardware_interface_facade
+    xxx_common_libraries
 )
 
 set(TASK_SPACE_REFERENCE_GENERATOR_INCLUDE_DEPENDS
@@ -44,10 +44,10 @@ set(TASK_SPACE_REFERENCE_GENERATOR_INCLUDE_DEPENDS
     pluginlib
     realtime_tools
     tf2_geometry_msgs
-    acg_control_msgs
+    xxx_control_msgs
     rclcpp_action
-    acg_hardware_interface_facade
-    acg_common_libraries
+    xxx_hardware_interface_facade
+    xxx_common_libraries
 )
 
 find_package(ament_cmake REQUIRED)

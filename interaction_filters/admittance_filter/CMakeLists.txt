@@ -22,7 +22,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
     pluginlib
     Eigen3
     generate_parameter_library
-    acg_common_libraries
+    xxx_common_libraries
 )
 
 foreach(dependency IN
@@ -85,8 +85,8 @@ if(BUILD_TESTING)
       geometry_msgs
       tf2_geometry_msgs
       std_msgs
-      acg_common_libraries
-      acg_control_msgs
+      xxx_common_libraries
+      xxx_control_msgs
       rosbag2_cpp
   )
 

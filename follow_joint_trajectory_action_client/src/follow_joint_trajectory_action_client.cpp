@@ -12,7 +12,7 @@
  * with an action server using the FollowJointTrajectory action.
  * This way, the trajectory execution can be monitored and data logged
  * to bag file. The node opens a bag file with a joint trajectory of
- * type acg_control_msgs/JointTrajectory, reads the trajectory
+ * type xxx_control_msgs/JointTrajectory, reads the trajectory
  * contained in it and sends it to the controller. Another bag file is
  * written containing the actual, desired and error trajectories.
  *
@@ -37,14 +37,14 @@
 #include <rosbag2_storage/serialized_bag_message.hpp>
 
 // Messages
-#include <acg_control_msgs/msg/joint_trajectory.hpp>
-#include <acg_control_msgs/action/follow_joint_trajectory.hpp>
+#include <xxx_control_msgs/msg/joint_trajectory.hpp>
+#include <xxx_control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace follow_joint_trajectory_action_client_cpp
 {
 class FollowJointTrajectoryActionClient : public rclcpp::Node
 {
-  using FollowJointTrajectoryGoalHandle = typename rclcpp_action::ClientGoalHandle<acg_control_msgs::action::FollowJointTrajectory>;
+  using FollowJointTrajectoryGoalHandle = typename rclcpp_action::ClientGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>;
 
 public:
   explicit FollowJointTrajectoryActionClient(const rclcpp::NodeOptions& options) : Node("follow_joint_trajectory_action_client", options)
@@ -84,13 +84,13 @@ public:
     output_path_ = this->get_parameter("output_path").as_string();
 
     // Initialize the variables that will contain trajectories
-    input_trajectory_ = std::make_shared<acg_control_msgs::msg::JointTrajectory>();
-    output_actual_trajectory_ = std::make_shared<acg_control_msgs::msg::JointTrajectory>();
-    output_desired_trajectory_ = std::make_shared<acg_control_msgs::msg::JointTrajectory>();
-    output_error_trajectory_ = std::make_shared<acg_control_msgs::msg::JointTrajectory>();
+    input_trajectory_ = std::make_shared<xxx_control_msgs::msg::JointTrajectory>();
+    output_actual_trajectory_ = std::make_shared<xxx_control_msgs::msg::JointTrajectory>();
+    output_desired_trajectory_ = std::make_shared<xxx_control_msgs::msg::JointTrajectory>();
+    output_error_trajectory_ = std::make_shared<xxx_control_msgs::msg::JointTrajectory>();
 
     // Read the input trajectory from a bag file
-    rclcpp::Serialization<acg_control_msgs::msg::JointTrajectory> serialization;
+    rclcpp::Serialization<xxx_control_msgs::msg::JointTrajectory> serialization;
     rosbag2_cpp::Reader reader;
 
     reader.open(input_path);
@@ -124,7 +124,7 @@ public:
     output_error_trajectory_->joint_names = input_trajectory_->joint_names;
 
     // Creation of an action client
-    client_ptr_ = rclcpp_action::create_client<acg_control_msgs::action::FollowJointTrajectory>(this, action_name + "/follow_joint_trajectory");
+    client_ptr_ = rclcpp_action::create_client<xxx_control_msgs::action::FollowJointTrajectory>(this, action_name + "/follow_joint_trajectory");
 
     // Send the first trajectory point and afterwards send the whole trajectory
     if (send_first_trajectory_point())
@@ -147,7 +147,7 @@ public:
     }
 
     // Create a goal message containing only the first trajectory point
-    acg_control_msgs::action::FollowJointTrajectory::Goal goal_msg;
+    xxx_control_msgs::action::FollowJointTrajectory::Goal goal_msg;
     goal_msg.trajectory.points.push_back(input_trajectory_.get()->points[0]);
     goal_msg.trajectory.joint_names = input_trajectory_.get()->joint_names;
     goal_msg.trajectory.header = input_trajectory_.get()->header;
@@ -207,13 +207,13 @@ public:
     }
 
     // Create a goal message containing the whole trajectory
-    acg_control_msgs::action::FollowJointTrajectory::Goal goal_msg;
+    xxx_control_msgs::action::FollowJointTrajectory::Goal goal_msg;
     goal_msg.trajectory.points = input_trajectory_.get()->points;
     goal_msg.trajectory.joint_names = input_trajectory_.get()->joint_names;
     goal_msg.trajectory.header = input_trajectory_.get()->header;
 
     // Sending the goal to the action server
-    rclcpp_action::Client<acg_control_msgs::action::FollowJointTrajectory>::SendGoalOptions send_goal_options;
+    rclcpp_action::Client<xxx_control_msgs::action::FollowJointTrajectory>::SendGoalOptions send_goal_options;
     send_goal_options.goal_response_callback = std::bind(&FollowJointTrajectoryActionClient::goal_response_callback, this, std::placeholders::_1);
     send_goal_options.feedback_callback =
         std::bind(&FollowJointTrajectoryActionClient::feedback_callback, this, std::placeholders::_1, std::placeholders::_2);
@@ -222,8 +222,8 @@ public:
   }
 
 private:
-  rclcpp_action::Client<acg_control_msgs::action::FollowJointTrajectory>::SharedPtr client_ptr_;
-  acg_control_msgs::msg::JointTrajectory::SharedPtr input_trajectory_, output_actual_trajectory_, output_desired_trajectory_,
+  rclcpp_action::Client<xxx_control_msgs::action::FollowJointTrajectory>::SharedPtr client_ptr_;
+  xxx_control_msgs::msg::JointTrajectory::SharedPtr input_trajectory_, output_actual_trajectory_, output_desired_trajectory_,
       output_error_trajectory_;
   int fraction_feedback_messages_to_save_{ 0 }, number_feedback_messages_received_{ 0 };
   builtin_interfaces::msg::Time controller_first_time_;
@@ -241,8 +241,8 @@ private:
     }
   }
 
-  void feedback_callback(rclcpp_action::ClientGoalHandle<acg_control_msgs::action::FollowJointTrajectory>::SharedPtr,
-                         const std::shared_ptr<const acg_control_msgs::action::FollowJointTrajectory::Feedback> feedback)
+  void feedback_callback(rclcpp_action::ClientGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>::SharedPtr,
+                         const std::shared_ptr<const xxx_control_msgs::action::FollowJointTrajectory::Feedback> feedback)
   {
     // Set controller_first_time_ on the first received feedback message
     if (number_feedback_messages_received_ == 0)
@@ -293,7 +293,7 @@ private:
 
         // Serialize the messages
         rclcpp::SerializedMessage serialized_output_actual_trajectory, serialized_output_desired_trajectory, serialized_output_error_trajectory;
-        rclcpp::Serialization<acg_control_msgs::msg::JointTrajectory> serialization;
+        rclcpp::Serialization<xxx_control_msgs::msg::JointTrajectory> serialization;
         serialization.serialize_message(output_actual_trajectory_.get(), &serialized_output_actual_trajectory);
         serialization.serialize_message(output_desired_trajectory_.get(), &serialized_output_desired_trajectory);
         serialization.serialize_message(output_error_trajectory_.get(), &serialized_output_error_trajectory);
@@ -315,7 +315,7 @@ private:
         // Topic creation on the bag file
         rosbag2_storage::TopicMetadata tm;
         tm.name = "/follow_joint_trajectory_result";
-        tm.type = "acg_control_msgs/msg/JointTrajectory";
+        tm.type = "xxx_control_msgs/msg/JointTrajectory";
         tm.serialization_format = "cdr";
         writer.create_topic(tm);
 
