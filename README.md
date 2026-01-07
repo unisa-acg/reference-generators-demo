@@ -75,7 +75,7 @@ Launch the simulation, which starts FER with PID controller:
 ros2 launch acg_resources_fer_moveit_config gazebo_ros2_control_demo.launch.py hand:=false controller:=pid_controller enable_effort_interfaces:=true controllers_file:=fer_reference_generator.yaml
 ```
 
-Then, load and activate the `joint_space_command_controller`, for example using the GUI:
+Then, load and activate the `joint_space_reference_generator`, for example using the GUI:
 ```bash
 ros2 run rqt_controller_manager rqt_controller_manager
 ```
@@ -92,7 +92,7 @@ Launch the simulation, which starts UR10 with PID controller:
 ros2 launch acg_resources_ur10_moveit_config gazebo_ros2_control_demo.launch.py controllers_file:=ur10_test_reference_controllers.yaml rviz_config_file:=config/joint_space_reference_generator_view_ee_pose.rviz initial_joint_controller:=pid_controller
 ```
 
-Then, load and activate `joint_space_command_controller`, for example using the GUI:
+Then, load and activate `joint_space_reference_generator`, for example using the GUI:
 ```bash
 ros2 run rqt_controller_manager rqt_controller_manager
 ```
