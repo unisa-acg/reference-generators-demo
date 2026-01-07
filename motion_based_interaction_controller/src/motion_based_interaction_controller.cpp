@@ -15,7 +15,7 @@
 
 #include <eigen3/Eigen/Core>
 
-#include <acg_common_libraries/message_utilities.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
 
 #include "motion_based_interaction_controller/motion_based_interaction_controller.hpp"
 
@@ -116,16 +116,16 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_init()
   }
 
   // Initialize state reader
-  state_reader_ = std::make_shared<acg_hardware_interface_facade::StateReader>();
+  state_reader_ = std::make_shared<xxx_hardware_interface_facade::StateReader>();
 
   // Initialize command writer
-  command_writer_ = std::make_shared<acg_hardware_interface_facade::CommandWriter>();
+  command_writer_ = std::make_shared<xxx_hardware_interface_facade::CommandWriter>();
 
   // Initialize the force/torque sensor reader
-  force_torque_sensor_reader_ = std::make_shared<acg_hardware_interface_facade::ForceTorqueSensorReader>();
+  force_torque_sensor_reader_ = std::make_shared<xxx_hardware_interface_facade::ForceTorqueSensorReader>();
 
   // Initialize the reference reader
-  reference_reader_ = std::make_shared<acg_hardware_interface_facade::ReferenceReader>();
+  reference_reader_ = std::make_shared<xxx_hardware_interface_facade::ReferenceReader>();
 
   // Assign and initialize the internal variables that can vary according to the robot's configuration
   joint_space_state_.positions.assign(number_of_joints_, std::numeric_limits<double>::quiet_NaN());
@@ -135,7 +135,7 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_init()
   force_filter_chain_ = std::make_shared<filters::MultiChannelFilterChain<double>>("double");
 
   // Initialize the robot kinematics utility
-  robot_kinematics_ = std::make_shared<acg_kinematics::RTKinematicsSolver>();
+  robot_kinematics_ = std::make_shared<xxx_kinematics::RTKinematicsSolver>();
   robot_kinematics_->initialize(number_of_joints_, kinematics_);
 
   // Set the motion reference frame
@@ -175,7 +175,7 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_config
   state_interfaces.emplace_back("position");
   state_interfaces.emplace_back("velocity");
 
-  acg_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
+  xxx_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
   state_interfaces_names_override.position_state_interfaces = parameters_.state_interfaces_names_override.position;
   state_interfaces_names_override.velocity_state_interfaces = parameters_.state_interfaces_names_override.velocity;
   if (!state_reader_->configure_state_interfaces(state_interfaces, parameters_.joints, parameters_.robot_name, state_interfaces_names_override))
@@ -195,7 +195,7 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_config
   // Configure command interfaces
   std::vector<std::string> command_interfaces = parameters_.command_interfaces;
 
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interfaces_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interfaces_names_override;
   command_interfaces_names_override.task_space_pose_interface_names = parameters_.command_interfaces_names_override.pose;
   command_interfaces_names_override.task_space_twist_interface_names = parameters_.command_interfaces_names_override.twist;
 
@@ -209,7 +209,7 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_config
   // Configure reference interfaces
   std::vector<std::string> reference_interfaces = parameters_.reference_interfaces;
 
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interfaces_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig reference_interfaces_names_override;
   reference_interfaces_names_override.task_space_pose_interface_names = parameters_.reference_interfaces_names_override.pose;
   reference_interfaces_names_override.task_space_twist_interface_names = parameters_.reference_interfaces_names_override.twist;
   reference_interfaces_names_override.task_space_wrench_interface_names = parameters_.reference_interfaces_names_override.wrench;
@@ -286,7 +286,7 @@ controller_interface::CallbackReturn MotionBasedInteractionController::on_activa
   task_space_state_.wrench_frame = force_torque_measure_frame_;
 
   // Initialize the task space reference to NaN when the controller is activated
-  acg_message_utilities::clear(task_space_reference_);
+  xxx_message_utilities::clear(task_space_reference_);
 
   // Initialize the task space command with the current robot state when the controller is activated
   task_space_command_.pose = task_space_state_.pose;
@@ -402,10 +402,10 @@ controller_interface::return_type MotionBasedInteractionController::update_and_w
       task_space_reference_.wrench_frame = wrench_reference_frame_;
 
       // Check for NaN values in the task space reference
-      if ((reference_reader_->has_task_space_pose_interface() && acg_message_utilities::is_nan(task_space_reference_.pose)) ||
-          (reference_reader_->has_task_space_twist_interface() && acg_message_utilities::is_nan(task_space_reference_.twist)) ||
-          (reference_reader_->has_task_space_twist_interface() && acg_message_utilities::is_nan(task_space_reference_.wrench)) ||
-          (reference_reader_->has_task_space_wrench_interface() && acg_message_utilities::is_nan(task_space_reference_.wrench)))
+      if ((reference_reader_->has_task_space_pose_interface() && xxx_message_utilities::is_nan(task_space_reference_.pose)) ||
+          (reference_reader_->has_task_space_twist_interface() && xxx_message_utilities::is_nan(task_space_reference_.twist)) ||
+          (reference_reader_->has_task_space_twist_interface() && xxx_message_utilities::is_nan(task_space_reference_.wrench)) ||
+          (reference_reader_->has_task_space_wrench_interface() && xxx_message_utilities::is_nan(task_space_reference_.wrench)))
       {
         RCLCPP_WARN_THROTTLE(get_node()->get_logger(), *get_node()->get_clock(), DURATION_MS_,
                              "Task space reference is NaN. Using the last valid reference.");
@@ -435,7 +435,7 @@ controller_interface::return_type MotionBasedInteractionController::update_and_w
     break;
   }
   // Check if the task space command is close to the task space state
-  if (!acg_kinematics::is_pose_close(task_space_command_.pose, task_space_state_.pose, parameters_.command_tolerance.translational_tolerance,
+  if (!xxx_kinematics::is_pose_close(task_space_command_.pose, task_space_state_.pose, parameters_.command_tolerance.translational_tolerance,
                                      parameters_.command_tolerance.rotational_tolerance))
   {
     RCLCPP_WARN(get_node()->get_logger(), "The task space command is not close to the task space state.");
@@ -474,7 +474,7 @@ bool MotionBasedInteractionController::filter_wrench_()
   if (filter_chain_number_of_channels_ == GRAVITY_COMPENSATION_FILTER_CHANNELS)
   {
     // Read the force/torque sensor pose
-    acg_control_msgs::msg::TaskSpacePoint ft_sensor_task_space_state;
+    xxx_control_msgs::msg::TaskSpacePoint ft_sensor_task_space_state;
     try
     {
       robot_kinematics_->compute_forward_kinematics(joint_space_state_.positions, joint_space_state_.velocities, motion_reference_frame_,

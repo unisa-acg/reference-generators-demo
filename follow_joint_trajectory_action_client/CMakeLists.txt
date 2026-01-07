@@ -16,7 +16,7 @@ endif()
 # find dependencies
 set(THIS_PACKAGE_INCLUDE_DEPENDS
     rclcpp_action
-    acg_control_msgs
+    xxx_control_msgs
     rclcpp_components
     rclcpp
     ament_index_cpp
@@ -57,7 +57,7 @@ ament_target_dependencies(
   rclcpp_components
   ament_index_cpp
   rosbag2_cpp
-  acg_control_msgs
+  xxx_control_msgs
 )
 
 rclcpp_components_register_node(

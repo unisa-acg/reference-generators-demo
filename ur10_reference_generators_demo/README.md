@@ -17,7 +17,7 @@ ros2 launch ur10_reference_generators_demo task_space_reference_generator_gazebo
 Then, send the trajectory to the `task_space_reference_generator` using the command:
 
 ```bash
-ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory acg_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/squared_trajectory.yaml)" --feedback
+ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory xxx_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/squared_trajectory.yaml)" --feedback
 ```
 
 The alternative is to load the `task_space_reference_generator` manually.
@@ -38,7 +38,7 @@ The `task_space_reference_generator` can receive references or trajectories.
 For example, run the following command:
 
 ```bash
-ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory acg_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/triangular_trajectory.yaml)" --feedback
+ros2 action send_goal /task_space_reference_generator/follow_task_space_trajectory xxx_control_msgs/action/FollowTaskSpaceTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/triangular_trajectory.yaml)" --feedback
 ```
 
 ## Simulations with Joint Space Reference Generator
@@ -55,7 +55,7 @@ ros2 launch ur10_reference_generators_demo joint_space_reference_generator_gazeb
 Then, send the trajectory to the `joint_space_reference_generator` using the command:
 
 ```bash
-ros2 action send_goal /joint_space_reference_generator/follow_joint_trajectory acg_control_msgs/action/FollowJointTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/test_joint_trajectory.yaml)" --feedback
+ros2 action send_goal /joint_space_reference_generator/follow_joint_trajectory xxx_control_msgs/action/FollowJointTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/test_joint_trajectory.yaml)" --feedback
 ```
 
 The alternative is to load the `joint_space_reference_generator` manually.
@@ -75,5 +75,5 @@ ros2 run rqt_controller_manager rqt_controller_manager
 The `joint_space_reference_generator` can receive references or trajectories. For example, run the following command:
 
 ```bash
-ros2 action send_goal /joint_space_reference_generator/follow_joint_trajectory acg_control_msgs/action/FollowJointTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/test_joint_trajectory.yaml)" --feedback
+ros2 action send_goal /joint_space_reference_generator/follow_joint_trajectory xxx_control_msgs/action/FollowJointTrajectory "$(cat $(ros2 pkg prefix --share ur10_reference_generators_demo)/config/test_joint_trajectory.yaml)" --feedback
 ```

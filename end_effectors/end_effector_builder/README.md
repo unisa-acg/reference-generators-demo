@@ -89,7 +89,7 @@ An example end-effector configuration file is the following:
 
 ```yaml
 ft_sensor_mounting:
-  description_package: "acg_resources_generic_mounting_description"
+  description_package: "xxx_resources_generic_mounting_description"
   description_file: "urdf/generic_mounting.urdf.xacro"
   description_params:
     height: 0.01
@@ -97,7 +97,7 @@ ft_sensor_mounting:
     mass: 0.05
 
 force_torque_sensor:
-  description_package: "acg_resources_generic_force_torque_sensor_description"
+  description_package: "xxx_resources_generic_force_torque_sensor_description"
   description_file: "urdf/generic_force_torque_sensor.urdf.xacro"
   description_params:
     height: 0.04
@@ -114,7 +114,7 @@ force_torque_sensor:
     update_rate: 100
 
 tool_mounting:
-  description_package: "acg_resources_generic_mounting_description"
+  description_package: "xxx_resources_generic_mounting_description"
   description_file: "urdf/generic_mounting.urdf.xacro"
   description_params:
     height: 0.01
@@ -122,7 +122,7 @@ tool_mounting:
     mass: 0.0
 
 tool:
-  description_package: "acg_resources_long_handle_description"
+  description_package: "xxx_resources_long_handle_description"
   description_file: "urdf/long_handle.urdf.xacro"
 ```
 
@@ -180,4 +180,4 @@ Each top-level key in the `yaml` file represents a component of the end-effector
 The `yaml` file can also contain additional top-level keys that are not directly related to the end-effector building process.
 These keys can be used to store additional information about the end-effector, such as metadata or configuration parameters that are not directly used by the macros in this package.
 Please refer to the specific package documentation for more information on how to use these additional keys.
-For an example on how to extend the end-effector configuration file with additional keys, see the [acg_resources_ur10_moveit_config package documentation](../../acg_resources_ur10_moveit_config/README.md#end-effector-configuration).
+For an example on how to extend the end-effector configuration file with additional keys, see the [xxx_resources_ur10_moveit_config package documentation](../../xxx_resources_ur10_moveit_config/README.md#end-effector-configuration).

@@ -22,12 +22,12 @@
 #include <rclcpp_action/server.hpp>
 #include <realtime_tools/realtime_buffer.hpp>
 
-#include <acg_control_msgs/msg/joint_trajectory.hpp>
-#include <acg_control_msgs/action/follow_joint_trajectory.hpp>
-#include <acg_control_msgs/msg/joint_wrench_point.hpp>
-#include <acg_control_msgs/msg/task_space_point.hpp>
-#include <acg_common_libraries/kinematics.hpp>
-#include <acg_hardware_interface_facade/command_writer.hpp>
+#include <xxx_control_msgs/msg/joint_trajectory.hpp>
+#include <xxx_control_msgs/action/follow_joint_trajectory.hpp>
+#include <xxx_control_msgs/msg/joint_wrench_point.hpp>
+#include <xxx_control_msgs/msg/task_space_point.hpp>
+#include <xxx_common_libraries/kinematics.hpp>
+#include <xxx_hardware_interface_facade/command_writer.hpp>
 
 #include "reference_generator/visibility_control.h"
 #include "reference_generator/reference_generator.hpp"
@@ -46,7 +46,7 @@ namespace joint_space_reference_generator
  */
 struct JointTrajectoryInfo : public reference_generator::TrajectoryInfo
 {
-  std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> goal_handle_{ nullptr };
+  std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> goal_handle_{ nullptr };
 };
 
 /**
@@ -94,7 +94,7 @@ protected:
    * Refer to the documentation of the action server for more details about the parameters.
    */
   rclcpp_action::GoalResponse handle_goal_(const rclcpp_action::GoalUUID& uuid,
-                                           std::shared_ptr<const acg_control_msgs::action::FollowJointTrajectory::Goal> goal);
+                                           std::shared_ptr<const xxx_control_msgs::action::FollowJointTrajectory::Goal> goal);
 
   /**
    * @brief Callback function for handling the cancellation of joint space trajectory received from the user via a topic
@@ -102,14 +102,14 @@ protected:
    * Refer to the documentation of the action server for more details about the parameters.
    */
   rclcpp_action::CancelResponse
-  handle_cancel_(const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> goal_handle);
+  handle_cancel_(const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> goal_handle);
 
   /**
    * @brief Callback function for handling the acceptance of joint space trajectory received from the user via a topic
    *
    * Refer to the documentation of the action server for more details about the parameters.
    */
-  void handle_accepted_(const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> goal_handle);
+  void handle_accepted_(const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> goal_handle);
 
   /**
    * @brief Callback function for handling the joint space reference received from the user via a topic
@@ -119,7 +119,7 @@ protected:
    *
    * @param[in] msg The joint space reference message received from the user
    */
-  void joint_space_reference_callback_(const std::shared_ptr<acg_control_msgs::msg::JointWrenchPoint> msg);
+  void joint_space_reference_callback_(const std::shared_ptr<xxx_control_msgs::msg::JointWrenchPoint> msg);
 
   /**
    * @brief Computes the feedback error between the desired and the actual joint space point
@@ -128,8 +128,8 @@ protected:
    * @param[in] actual The actual joint space point
    * @param[out] error The error between the desired and the actual joint space point
    */
-  static void compute_feedback_error_(const acg_control_msgs::msg::JointWrenchPoint& desired, const acg_control_msgs::msg::JointWrenchPoint& actual,
-                                      acg_control_msgs::msg::JointWrenchPoint& error);
+  static void compute_feedback_error_(const xxx_control_msgs::msg::JointWrenchPoint& desired, const xxx_control_msgs::msg::JointWrenchPoint& actual,
+                                      xxx_control_msgs::msg::JointWrenchPoint& error);
 
   /**
    * @brief Checks if the joint wrench point point is valid
@@ -142,7 +142,7 @@ protected:
    * @param[in] num_joints The number of joints of the robot
    * @return true if the joint wrench point point is valid, false otherwise
    */
-  bool check_joint_space_trajectory_point_(const acg_control_msgs::msg::JointWrenchPoint& joint_space_point, const std::size_t num_joints) const;
+  bool check_joint_space_trajectory_point_(const xxx_control_msgs::msg::JointWrenchPoint& joint_space_point, const std::size_t num_joints) const;
 
   /**
    * @brief Computes the task space point from the joint space point
@@ -164,44 +164,44 @@ protected:
    * @param[in,out] point The trajectory point to update.
    */
   void ensure_wrench_frame_or_clear_(const std::string& desired_wrench_frame, const std::vector<double>& positions,
-                                     acg_control_msgs::msg::JointWrenchPoint& point);
+                                     xxx_control_msgs::msg::JointWrenchPoint& point);
 
   // Pointer to the ParamListener object that handles the parameters for the controller
   std::shared_ptr<joint_space_reference_generator::ParamListener> parameter_handler_;
 
   // Subscriber for handling the joint space reference received from the user via a topic
-  rclcpp::Subscription<acg_control_msgs::msg::JointWrenchPoint>::SharedPtr joint_space_reference_subscriber_;
+  rclcpp::Subscription<xxx_control_msgs::msg::JointWrenchPoint>::SharedPtr joint_space_reference_subscriber_;
 
   // Real-time buffer for the joint space command and the task space command
-  realtime_tools::RealtimeBuffer<std::shared_ptr<acg_control_msgs::msg::JointWrenchPoint>> joint_space_reference_buffer_;
-  realtime_tools::RealtimeBuffer<std::shared_ptr<acg_control_msgs::msg::TaskSpacePoint>> task_space_reference_buffer_;
+  realtime_tools::RealtimeBuffer<std::shared_ptr<xxx_control_msgs::msg::JointWrenchPoint>> joint_space_reference_buffer_;
+  realtime_tools::RealtimeBuffer<std::shared_ptr<xxx_control_msgs::msg::TaskSpacePoint>> task_space_reference_buffer_;
 
   // Action server for handling the joint space trajectory action received from the user
-  rclcpp_action::Server<acg_control_msgs::action::FollowJointTrajectory>::SharedPtr joint_space_trajectory_action_server_;
+  rclcpp_action::Server<xxx_control_msgs::action::FollowJointTrajectory>::SharedPtr joint_space_trajectory_action_server_;
 
   // Helper classes for reading and writing the command and state interfaces
-  acg_hardware_interface_facade::CommandWriter command_writer_;
+  xxx_hardware_interface_facade::CommandWriter command_writer_;
 
   // Internal variables to store the joint space reference and the task space reference
-  acg_control_msgs::msg::JointWrenchPoint joint_reference_;
-  acg_control_msgs::msg::TaskSpacePoint task_space_reference_;
+  xxx_control_msgs::msg::JointWrenchPoint joint_reference_;
+  xxx_control_msgs::msg::TaskSpacePoint task_space_reference_;
 
   // Real-time buffer for the trajectory info of the joint space trajectory
   realtime_tools::RealtimeBuffer<JointTrajectoryInfo> trajectory_info_buffer_;
 
   // Internal variable to handle the trajectory points
-  acg_control_msgs::msg::JointTrajectoryPoint current_traj_point_;
-  acg_control_msgs::msg::JointTrajectoryPoint next_traj_point_;
+  xxx_control_msgs::msg::JointTrajectoryPoint current_traj_point_;
+  xxx_control_msgs::msg::JointTrajectoryPoint next_traj_point_;
 
   // Trajectory info to store the joint space trajectory information
   JointTrajectoryInfo trajectory_info_;
 
   // Feedback message for the joint space trajectory action. For real-time safety, the feedback message is pre-allocated in the on_configure method.
-  typedef acg_control_msgs::action::FollowJointTrajectory::Feedback JointTrajFeedback;
+  typedef xxx_control_msgs::action::FollowJointTrajectory::Feedback JointTrajFeedback;
   std::shared_ptr<JointTrajFeedback> feedback_;
 
   // Internal variable that handles the computation of the forward kinematics of the robot
-  acg_kinematics::RTKinematicsSolver robot_kinematics_;
+  xxx_kinematics::RTKinematicsSolver robot_kinematics_;
 };
 
 }  // namespace joint_space_reference_generator

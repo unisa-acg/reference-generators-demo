@@ -35,7 +35,7 @@ def launch_setup(context, *args, **kwargs):
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("acg_resources_fer_moveit_config"),
+                    FindPackageShare("xxx_resources_fer_moveit_config"),
                     "launch",
                     "gazebo_ros2_control_demo.launch.py",
                 ]
@@ -77,7 +77,7 @@ def launch_setup(context, *args, **kwargs):
     # Ignition Gazebo without putting a condition as done for the torque
     gz_params_bridge = PathJoinSubstitution(
         [
-            FindPackageShare("acg_resources_fer_moveit_config"),
+            FindPackageShare("xxx_resources_fer_moveit_config"),
             "config",
             "gz_params_bridge.yaml",
         ]
@@ -155,7 +155,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "gazebo_world_package",
-            default_value="acg_resources_fer_moveit_config",
+            default_value="xxx_resources_fer_moveit_config",
             description="Package with the Gazebo world file.",
         )
     )

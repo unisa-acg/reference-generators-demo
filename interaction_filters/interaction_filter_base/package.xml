@@ -9,7 +9,7 @@
   <license>BSD</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <depend>acg_control_msgs</depend>
+  <depend>xxx_control_msgs</depend>
   <depend>rclcpp</depend>
 
   <export>

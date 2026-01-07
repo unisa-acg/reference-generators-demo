@@ -17,7 +17,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-    rclcpp acg_control_msgs
+    rclcpp xxx_control_msgs
 )
 
 foreach(dependency IN

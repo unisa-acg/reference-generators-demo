@@ -22,8 +22,8 @@
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <geometry_msgs/msg/wrench_stamped.hpp>
 #include <pluginlib/class_loader.hpp>
-#include <acg_common_libraries/message_utilities.hpp>
-#include <acg_control_msgs/msg/task_space_point.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
+#include <xxx_control_msgs/msg/task_space_point.hpp>
 #include <interaction_filter_base/interaction_filter_base.hpp>
 #include "admittance_filter/admittance_filter.hpp"
 
@@ -194,14 +194,14 @@ TEST_P(AdmittanceFilterTest, TestAdmittanceFilter)
     tf2::fromMsg(filter_input_[i].wrench, delta_h);
 
     // Set the reference for the admittance filter
-    acg_control_msgs::msg::TaskSpacePoint admittance_filter_input;
+    xxx_control_msgs::msg::TaskSpacePoint admittance_filter_input;
     admittance_filter_input.pose = geometry_msgs::msg::Pose();
     admittance_filter_input.twist = geometry_msgs::msg::Twist();
     admittance_filter_input.acceleration = geometry_msgs::msg::Accel();
     tf2::toMsg(delta_h, admittance_filter_input.wrench);
 
     // Compute the filter output
-    acg_control_msgs::msg::TaskSpacePoint admittance_filter_output;
+    xxx_control_msgs::msg::TaskSpacePoint admittance_filter_output;
     rclcpp::Duration current_time(filter_input_[i].header.stamp.sec, filter_input_[i].header.stamp.nanosec);
     ASSERT_TRUE(interaction_filter_->update(admittance_filter_input, current_time - previous_time, admittance_filter_output));
 

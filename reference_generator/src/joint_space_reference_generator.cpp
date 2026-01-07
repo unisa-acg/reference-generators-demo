@@ -18,9 +18,9 @@
 
 #include <pluginlib/class_list_macros.hpp>
 
-#include <acg_common_libraries/diagnostics.hpp>
-#include <acg_common_libraries/interpolation.hpp>
-#include <acg_common_libraries/message_utilities.hpp>
+#include <xxx_common_libraries/diagnostics.hpp>
+#include <xxx_common_libraries/interpolation.hpp>
+#include <xxx_common_libraries/message_utilities.hpp>
 
 #include "reference_generator/joint_space_reference_generator.hpp"
 
@@ -50,7 +50,7 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_init()
   }
 
   // Setting the command interface names override struct based on the configuration file
-  acg_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
+  xxx_hardware_interface_facade::CommandInterfaceNamesOverrideConfig command_interface_names_override;
   command_interface_names_override.joint_position_interface_names = parameter_handler_->get_params().command_interfaces_names_override.joint_position;
   command_interface_names_override.joint_velocity_interface_names = parameter_handler_->get_params().command_interfaces_names_override.joint_velocity;
   command_interface_names_override.joint_acceleration_interface_names =
@@ -108,7 +108,7 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_configure(
   {
     joint_reference_.effort.assign(num_joints_, std::numeric_limits<double>::quiet_NaN());
   }
-  acg_message_utilities::clear(joint_reference_.wrench);
+  xxx_message_utilities::clear(joint_reference_.wrench);
 
   // Initialize feedback with NaN values
   feedback_ = std::make_shared<JointTrajFeedback>();
@@ -162,7 +162,7 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_configure(
   next_traj_point_.point.effort.reserve(num_joints_);
   next_traj_point_.point.wrench_frame.reserve(ReferenceGenerator::STRING_INITIAL_CAPACITY_);
 
-  joint_space_trajectory_action_server_ = rclcpp_action::create_server<acg_control_msgs::action::FollowJointTrajectory>(
+  joint_space_trajectory_action_server_ = rclcpp_action::create_server<xxx_control_msgs::action::FollowJointTrajectory>(
       get_node(), "~/follow_joint_trajectory",
       std::bind(&JointSpaceReferenceGenerator::handle_goal_, this, std::placeholders::_1, std::placeholders::_2),
       std::bind(&JointSpaceReferenceGenerator::handle_cancel_, this, std::placeholders::_1),
@@ -172,7 +172,7 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_configure(
   rclcpp::QoS qos = rclcpp::QoS(rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_default));
   qos.reliability(rmw_qos_reliability_policy_t::RMW_QOS_POLICY_RELIABILITY_RELIABLE);
 
-  joint_space_reference_subscriber_ = get_node()->create_subscription<acg_control_msgs::msg::JointWrenchPoint>(
+  joint_space_reference_subscriber_ = get_node()->create_subscription<xxx_control_msgs::msg::JointWrenchPoint>(
       "~/reference", qos, std::bind(&JointSpaceReferenceGenerator::joint_space_reference_callback_, this, std::placeholders::_1));
 
   return controller_interface::CallbackReturn::SUCCESS;
@@ -220,13 +220,13 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_activate(c
   }
   else
   {
-    acg_message_utilities::clear(joint_reference_.wrench);
+    xxx_message_utilities::clear(joint_reference_.wrench);
   }
 
   // Initializing the task space reference
 
   // Setting all values to NaN
-  acg_message_utilities::clear(task_space_reference_);
+  xxx_message_utilities::clear(task_space_reference_);
   task_space_reference_.motion_frame = ReferenceGenerator::task_space_reference_frame_;
   task_space_reference_.wrench_frame = ReferenceGenerator::wrench_reference_frame_;
 
@@ -252,8 +252,8 @@ controller_interface::CallbackReturn JointSpaceReferenceGenerator::on_activate(c
     task_space_reference_.wrench_derivative = geometry_msgs::msg::Wrench();
   }
 
-  joint_space_reference_buffer_.writeFromNonRT(std::make_shared<acg_control_msgs::msg::JointWrenchPoint>(joint_reference_));
-  task_space_reference_buffer_.writeFromNonRT(std::make_shared<acg_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
+  joint_space_reference_buffer_.writeFromNonRT(std::make_shared<xxx_control_msgs::msg::JointWrenchPoint>(joint_reference_));
+  task_space_reference_buffer_.writeFromNonRT(std::make_shared<xxx_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
 
   return controller_interface::CallbackReturn::SUCCESS;
 }
@@ -278,11 +278,11 @@ void JointSpaceReferenceGenerator::abort_trajectory(const std::string& error_str
   // If the goal handle is still valid, abort the goal
   if (trajectory_info_.goal_handle_)
   {
-    std::shared_ptr<acg_control_msgs::action::FollowJointTrajectory_Result> result =
-        std::make_shared<acg_control_msgs::action::FollowJointTrajectory::Result>();
-    result->error_code = acg_control_msgs::action::FollowJointTrajectory::Result::TRAJECTORY_ABORTED;
+    std::shared_ptr<xxx_control_msgs::action::FollowJointTrajectory_Result> result =
+        std::make_shared<xxx_control_msgs::action::FollowJointTrajectory::Result>();
+    result->error_code = xxx_control_msgs::action::FollowJointTrajectory::Result::TRAJECTORY_ABORTED;
     result->error_string = error_string;
-    std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> goal_handle = trajectory_info_.goal_handle_;
+    std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> goal_handle = trajectory_info_.goal_handle_;
     goal_handle->abort(result);
     goal_handle.reset();
     trajectory_info_ = JointTrajectoryInfo();
@@ -315,7 +315,7 @@ void JointSpaceReferenceGenerator::calculate_and_publish_feedback(const rclcpp::
   if (!trajectory_info_.first_point_executed_)
   {
     // Since the trajectory has not started yet (because the user delayed it) the reference is set to NaN
-    acg_message_utilities::clear(feedback_->desired.point);
+    xxx_message_utilities::clear(feedback_->desired.point);
   }
   else
   {
@@ -327,7 +327,7 @@ void JointSpaceReferenceGenerator::calculate_and_publish_feedback(const rclcpp::
   feedback_->actual.point.velocities = robot_joint_state_.velocities;
   feedback_->actual.point.accelerations = robot_joint_state_.accelerations;
   feedback_->actual.point.effort = robot_joint_state_.efforts;
-  acg_message_utilities::clear(feedback_->actual.point.wrench);
+  xxx_message_utilities::clear(feedback_->actual.point.wrench);
 
   // Update error trajectory feedback
   compute_feedback_error_(feedback_->desired.point, feedback_->actual.point, feedback_->error.point);
@@ -339,7 +339,7 @@ void JointSpaceReferenceGenerator::calculate_and_publish_feedback(const rclcpp::
 std::size_t JointSpaceReferenceGenerator::get_next_trajectory_index()
 {
   // Getting a reference to the joint trajectory (so it is not copied)
-  const acg_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
+  const xxx_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
 
   // Getting the index of the last trajectory waypoint
   std::size_t next_trajectory_index{ trajectory_info_.trajectory_index_ };
@@ -361,7 +361,7 @@ std::size_t JointSpaceReferenceGenerator::get_next_trajectory_index()
 
 bool JointSpaceReferenceGenerator::update_next_reference_from_trajectory()
 {
-  const acg_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
+  const xxx_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
 
   current_traj_point_ = joint_trajectory.points[trajectory_info_.trajectory_index_];
 
@@ -399,7 +399,7 @@ bool JointSpaceReferenceGenerator::update_next_reference_from_trajectory()
 
     try
     {
-      acg_interpolation::linearly_interpolate(current_traj_point_, next_traj_point_, trajectory_info_.current_time_.seconds(), joint_reference_);
+      xxx_interpolation::linearly_interpolate(current_traj_point_, next_traj_point_, trajectory_info_.current_time_.seconds(), joint_reference_);
     }
     catch (const std::runtime_error& e)
     {
@@ -422,12 +422,12 @@ bool JointSpaceReferenceGenerator::update_next_reference_from_trajectory()
 
 void JointSpaceReferenceGenerator::handle_trajectory_completed()
 {
-  const acg_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
+  const xxx_control_msgs::msg::JointTrajectory& joint_trajectory = trajectory_info_.goal_handle_->get_goal()->trajectory;
   if (trajectory_info_.trajectory_index_ == joint_trajectory.points.size() - 1)
   {
-    std::shared_ptr<acg_control_msgs::action::FollowJointTrajectory_Result> result =
-        std::make_shared<acg_control_msgs::action::FollowJointTrajectory::Result>();
-    result->error_code = acg_control_msgs::action::FollowJointTrajectory::Result::SUCCESSFUL;
+    std::shared_ptr<xxx_control_msgs::action::FollowJointTrajectory_Result> result =
+        std::make_shared<xxx_control_msgs::action::FollowJointTrajectory::Result>();
+    result->error_code = xxx_control_msgs::action::FollowJointTrajectory::Result::SUCCESSFUL;
     trajectory_info_.goal_handle_->succeed(result);
 
     trajectory_info_.goal_handle_.reset();
@@ -444,7 +444,7 @@ void JointSpaceReferenceGenerator::publish_reference_pose(const rclcpp::Time& ti
 {
   // Publish the reference so that it can be visualized in RViz.
   periodic_reference_publisher_->publish(
-      acg_message_utilities::build_pose_stamped_msg(task_space_reference_.pose, ReferenceGenerator::task_space_reference_frame_, time), time);
+      xxx_message_utilities::build_pose_stamped_msg(task_space_reference_.pose, ReferenceGenerator::task_space_reference_frame_, time), time);
 }
 
 void JointSpaceReferenceGenerator::read_trajectory_info_from_non_rt()
@@ -454,7 +454,7 @@ void JointSpaceReferenceGenerator::read_trajectory_info_from_non_rt()
 }
 
 rclcpp_action::GoalResponse JointSpaceReferenceGenerator::handle_goal_(
-    const rclcpp_action::GoalUUID&, std::shared_ptr<const acg_control_msgs::action::FollowJointTrajectory::Goal> goal)
+    const rclcpp_action::GoalUUID&, std::shared_ptr<const xxx_control_msgs::action::FollowJointTrajectory::Goal> goal)
 {
   if (goal->trajectory.points.empty())
   {
@@ -546,7 +546,7 @@ rclcpp_action::GoalResponse JointSpaceReferenceGenerator::handle_goal_(
 };
 
 rclcpp_action::CancelResponse JointSpaceReferenceGenerator::handle_cancel_(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> /* goal_handle */)
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> /* goal_handle */)
 {
   RCLCPP_INFO(get_node()->get_logger(), "Received request to cancel joint space trajectory goal");
 
@@ -555,7 +555,7 @@ rclcpp_action::CancelResponse JointSpaceReferenceGenerator::handle_cancel_(
 };
 
 void JointSpaceReferenceGenerator::handle_accepted_(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<acg_control_msgs::action::FollowJointTrajectory>> goal_handle)
+    const std::shared_ptr<rclcpp_action::ServerGoalHandle<xxx_control_msgs::action::FollowJointTrajectory>> goal_handle)
 {
   RCLCPP_INFO(get_node()->get_logger(), "Received request to execute joint space trajectory goal");
 
@@ -570,7 +570,7 @@ void JointSpaceReferenceGenerator::handle_accepted_(
   trigger_trajectory_accepted_event();
 };
 
-void JointSpaceReferenceGenerator::joint_space_reference_callback_(const std::shared_ptr<acg_control_msgs::msg::JointWrenchPoint> msg)
+void JointSpaceReferenceGenerator::joint_space_reference_callback_(const std::shared_ptr<xxx_control_msgs::msg::JointWrenchPoint> msg)
 {
   // Check if the joint space reference is valid
   std::vector<std::string> joint_space_command_interfaces = parameter_handler_->get_params().joint_space_command_interfaces;
@@ -595,7 +595,7 @@ void JointSpaceReferenceGenerator::joint_space_reference_callback_(const std::sh
   }
   else if (msg->wrench_frame != ReferenceGenerator::wrench_reference_frame_)
   {
-    acg_kinematics::transform_wrench_frame(*kinematics_, msg->positions, ReferenceGenerator::wrench_reference_frame_, msg->wrench_frame, msg->wrench);
+    xxx_kinematics::transform_wrench_frame(*kinematics_, msg->positions, ReferenceGenerator::wrench_reference_frame_, msg->wrench_frame, msg->wrench);
     msg->wrench_frame = ReferenceGenerator::wrench_reference_frame_;
   }
 
@@ -605,14 +605,14 @@ void JointSpaceReferenceGenerator::joint_space_reference_callback_(const std::sh
   compute_task_space_point_from_joint_space_(msg->positions, msg->velocities);
 
   // Write the task space reference to the task space real-time buffer
-  task_space_reference_buffer_.writeFromNonRT(std::make_shared<acg_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
+  task_space_reference_buffer_.writeFromNonRT(std::make_shared<xxx_control_msgs::msg::TaskSpacePoint>(task_space_reference_));
 
   trigger_publish_on_topic_event();
 };
 
-void JointSpaceReferenceGenerator::compute_feedback_error_(const acg_control_msgs::msg::JointWrenchPoint& desired,
-                                                           const acg_control_msgs::msg::JointWrenchPoint& actual,
-                                                           acg_control_msgs::msg::JointWrenchPoint& error)
+void JointSpaceReferenceGenerator::compute_feedback_error_(const xxx_control_msgs::msg::JointWrenchPoint& desired,
+                                                           const xxx_control_msgs::msg::JointWrenchPoint& actual,
+                                                           xxx_control_msgs::msg::JointWrenchPoint& error)
 {
   std::function<void(const std::vector<double>&, const std::vector<double>&, std::vector<double>&)> compute_error =
       [](const std::vector<double>& des, const std::vector<double>& act, std::vector<double>& err)
@@ -638,7 +638,7 @@ void JointSpaceReferenceGenerator::compute_feedback_error_(const acg_control_msg
   error.wrench.torque.z = desired.wrench.torque.z - actual.wrench.torque.z;
 }
 
-bool JointSpaceReferenceGenerator::check_joint_space_trajectory_point_(const acg_control_msgs::msg::JointWrenchPoint& joint_space_point,
+bool JointSpaceReferenceGenerator::check_joint_space_trajectory_point_(const xxx_control_msgs::msg::JointWrenchPoint& joint_space_point,
                                                                        const std::size_t num_joints) const
 {
   // Create a lambda function to check the interface:
@@ -698,7 +698,7 @@ void JointSpaceReferenceGenerator::compute_task_space_point_from_joint_space_(co
                                                                               const std::vector<double>& velocities)
 {
   // Clear the task space reference, so that the controller does not use the previous reference
-  acg_message_utilities::clear(task_space_reference_);
+  xxx_message_utilities::clear(task_space_reference_);
   task_space_reference_.motion_frame = ReferenceGenerator::task_space_reference_frame_;
   task_space_reference_.wrench_frame = ReferenceGenerator::wrench_reference_frame_;
 
@@ -727,18 +727,18 @@ void JointSpaceReferenceGenerator::compute_task_space_point_from_joint_space_(co
 }
 
 void JointSpaceReferenceGenerator::ensure_wrench_frame_or_clear_(const std::string& desired_wrench_frame, const std::vector<double>& positions,
-                                                                 acg_control_msgs::msg::JointWrenchPoint& point)
+                                                                 xxx_control_msgs::msg::JointWrenchPoint& point)
 {
   if (command_writer_.has_joint_wrench_interface())
   {
     if (!point.wrench_frame.empty() && point.wrench_frame != desired_wrench_frame)
     {
-      acg_kinematics::transform_wrench_frame(*ReferenceGenerator::kinematics_, positions, desired_wrench_frame, point.wrench_frame, point.wrench);
+      xxx_kinematics::transform_wrench_frame(*ReferenceGenerator::kinematics_, positions, desired_wrench_frame, point.wrench_frame, point.wrench);
     }
   }
   else
   {
-    acg_message_utilities::clear(point.wrench);
+    xxx_message_utilities::clear(point.wrench);
   }
 }
 

@@ -82,7 +82,7 @@ def launch_setup(context, *args, **kwargs):
     # Ignition Gazebo without putting a condition as done for the torque
     gz_params_bridge = PathJoinSubstitution(
         [
-            FindPackageShare("acg_resources_fer_moveit_config"),
+            FindPackageShare("xxx_resources_fer_moveit_config"),
             "config",
             "gz_params_bridge.yaml",
         ]

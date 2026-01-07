@@ -17,4 +17,4 @@ If the robot operates in a different orientation, the bias must be recalculated 
 
 ## Launch demos
 
-For demo launches, please refer to the [`Simulation with force/torque sensor`](../acg_resources_ur10_moveit_config/README.md#simulation-with-forcetorque-sensing) section in the README of `acg_resources_ur10_moveit_config` package.
+For demo launches, please refer to the [`Simulation with force/torque sensor`](../xxx_resources_ur10_moveit_config/README.md#simulation-with-forcetorque-sensing) section in the README of `xxx_resources_ur10_moveit_config` package.

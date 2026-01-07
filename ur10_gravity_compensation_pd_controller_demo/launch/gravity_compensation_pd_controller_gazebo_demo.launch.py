@@ -32,7 +32,7 @@ def launch_setup(context, *args, **kwargs):
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("acg_resources_ur10_moveit_config"),
+                    FindPackageShare("xxx_resources_ur10_moveit_config"),
                     "launch",
                     "gazebo_ros2_control_demo.launch.py",
                 ]

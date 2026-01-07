@@ -105,7 +105,7 @@ controller_interface::CallbackReturn ReferenceGenerator::on_init()
 
   publish_frequency_ = parameter_handler_->get_params().publish_task_space_reference.frequency;
 
-  acg_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
+  xxx_hardware_interface_facade::StateInterfaceNamesOverrideConfig state_interfaces_names_override;
   state_interfaces_names_override.position_state_interfaces = parameter_handler_->get_params().state_interfaces_names_override.position;
   state_interfaces_names_override.velocity_state_interfaces = parameter_handler_->get_params().state_interfaces_names_override.velocity;
   state_interfaces_names_override.acceleration_state_interfaces = parameter_handler_->get_params().state_interfaces_names_override.acceleration;
@@ -127,10 +127,10 @@ controller_interface::CallbackReturn ReferenceGenerator::on_init()
 controller_interface::CallbackReturn ReferenceGenerator::on_configure(const rclcpp_lifecycle::State&)
 {
   // Initialize the internal variables of the controller
-  robot_joint_state_ = acg_hardware_interface_facade::RobotJointState{};
+  robot_joint_state_ = xxx_hardware_interface_facade::RobotJointState{};
 
   // Initializing the periodic real-time publisher. It publishes the reference so that it can be visualized in RViz
-  periodic_reference_publisher_ = std::make_shared<acg_diagnostics::PeriodicPublisher<geometry_msgs::msg::PoseStamped>>(
+  periodic_reference_publisher_ = std::make_shared<xxx_diagnostics::PeriodicPublisher<geometry_msgs::msg::PoseStamped>>(
       get_node(), "~/desired", rclcpp::SystemDefaultsQoS(), publish_frequency_);
 
   // Assign and initialize the internal variables that can vary according to the robot's configuration

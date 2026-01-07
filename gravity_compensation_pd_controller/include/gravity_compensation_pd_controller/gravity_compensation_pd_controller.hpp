@@ -25,9 +25,9 @@
 #include <controller_interface/chainable_controller_interface.hpp>
 #include <inverse_dynamics_solver/inverse_dynamics_solver.hpp>
 
-#include <acg_hardware_interface_facade/state_reader.hpp>
-#include <acg_hardware_interface_facade/reference_reader.hpp>
-#include <acg_hardware_interface_facade/command_writer.hpp>
+#include <xxx_hardware_interface_facade/state_reader.hpp>
+#include <xxx_hardware_interface_facade/reference_reader.hpp>
+#include <xxx_hardware_interface_facade/command_writer.hpp>
 
 #include "gravity_compensation_pd_controller/gravity_compensation_pd_controller_parameters.hpp"
 #include "gravity_compensation_pd_controller/visibility_control.h"
@@ -99,7 +99,7 @@ protected:
   /**
    * @brief Variables to store the joint command, reference, and last reference.
    */
-  acg_control_msgs::msg::JointWrenchPoint joint_command_, joint_reference_, last_joint_reference_;
+  xxx_control_msgs::msg::JointWrenchPoint joint_command_, joint_reference_, last_joint_reference_;
 
   /**
    * @brief Shared pointer to the parameter listener responsible for handling the controller's parameters.
@@ -144,22 +144,22 @@ protected:
   /**
    * @brief Internal variable to store the current joint state of the robot.
    */
-  acg_hardware_interface_facade::RobotJointState robot_joint_state_;
+  xxx_hardware_interface_facade::RobotJointState robot_joint_state_;
 
   /**
    * @brief Class for reading the reference input for the controller.
    */
-  acg_hardware_interface_facade::ReferenceReader reference_reader_;
+  xxx_hardware_interface_facade::ReferenceReader reference_reader_;
 
   /**
    * @brief Class for reading the state interfaces of the robot.
    */
-  acg_hardware_interface_facade::StateReader state_reader_;
+  xxx_hardware_interface_facade::StateReader state_reader_;
 
   /**
    * @brief Class for writing commands to the robot actuators.
    */
-  acg_hardware_interface_facade::CommandWriter command_writer_;
+  xxx_hardware_interface_facade::CommandWriter command_writer_;
 };
 
 }  // namespace gravity_compensation_pd_controller

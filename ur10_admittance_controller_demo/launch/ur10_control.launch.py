@@ -26,7 +26,7 @@ def launch_setup(context, *args, **kwargs):
         PythonLaunchDescriptionSource(
             PathJoinSubstitution(
                 [
-                    FindPackageShare("acg_resources_ur10_moveit_config"),
+                    FindPackageShare("xxx_resources_ur10_moveit_config"),
                     "launch",
                     "ur10_control.launch.py",
                 ]
@@ -72,7 +72,7 @@ def generate_launch_description():
     declared_arguments.append(
         DeclareLaunchArgument(
             "description_package",
-            default_value="acg_resources_ur10_description",
+            default_value="xxx_resources_ur10_description",
             description="Description package with robot URDF/XACRO files. Usually the argument "
             "is not set, it enables use of a custom description.",
         )

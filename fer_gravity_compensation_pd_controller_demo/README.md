@@ -19,7 +19,7 @@ ros2 launch fer_gravity_compensation_pd_controller_demo gravity_compensation_pd_
 Then, send the trajectory to the `joint_space_reference_generator` using the command:
 
 ```bash
-ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_acg_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
+ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_xxx_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```
 
 ## Test with real robot
@@ -29,7 +29,7 @@ ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action
 Send the robot to the desired initial joint positions:
 
 ```bash
-ros2 launch acg_resources_fer_moveit_config moveit_fer.launch.py robot_ip:=192.168.1.1
+ros2 launch xxx_resources_fer_moveit_config moveit_fer.launch.py robot_ip:=192.168.1.1
 ```
 
 ```bash
@@ -47,5 +47,5 @@ ros2 launch fer_gravity_compensation_pd_controller_demo gravity_compensation_pd_
 Then, send the trajectory to the `joint_space_reference_generator` using the command:
 
 ```bash
-ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_acg_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
+ros2 launch follow_joint_trajectory_action_client follow_joint_trajectory_action_client.launch.py input_trajectory_filename:=fer_exciting_xxx_trajectory_42_real_0_no_vel action_name:=joint_space_reference_generator fraction_feedback_messages_to_save:=1
 ```

@@ -10,9 +10,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>acg_control_msgs</exec_depend>
-  <exec_depend>acg_resources_ur10_description</exec_depend>
-  <exec_depend>acg_resources_ur10_moveit_config</exec_depend>
+  <exec_depend>xxx_control_msgs</exec_depend>
+  <exec_depend>xxx_resources_ur10_description</exec_depend>
+  <exec_depend>xxx_resources_ur10_moveit_config</exec_depend>
   <exec_depend>cartesian_pose_controller</exec_depend>
   <exec_depend>follow_task_trajectory_action_client</exec_depend>
   <exec_depend>kinematics_interface_kdl</exec_depend>

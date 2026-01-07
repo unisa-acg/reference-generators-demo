@@ -20,8 +20,8 @@ The `.urdf.xacro` file must define a xacro macro named `build_force_torque_senso
 * `config`: a dictionary containing the configuration parameters of the sensor provided by the user.
   The provided configuration parameters should be used to generate the URDF description of the sensor.
   A configuration parameter can be either mandatory or optional (i.e. it has a default value).
-  To read the value of a configuration parameter, the [`define_property_from_dict`](../../acg_common_libraries/xacro/define_property_from_dict.xacro) macro should be used.
-  For more information on how to use this macro, please refer to the [`acg_common_libraries` package README](../../acg_common_libraries/README.md#using-the-define_property_from_dict-macro) or any of the existing mountings in this library.
+  To read the value of a configuration parameter, the [`define_property_from_dict`](../../xxx_common_libraries/xacro/define_property_from_dict.xacro) macro should be used.
+  For more information on how to use this macro, please refer to the [`xxx_common_libraries` package README](../../xxx_common_libraries/README.md#using-the-define_property_from_dict-macro) or any of the existing mountings in this library.
 * `enable_ft_sensing`: a boolean that indicates whether the force/torque sensor should sense forces and torques.
   If `true`, the `sensed_joint_name` and `sensing_frame_name` parameters should be defined.
   If `false`, the sensor will not sense forces and torques, but it will still be mounted to the robot.

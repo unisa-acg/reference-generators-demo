@@ -37,8 +37,8 @@ public:
   /**
    * @brief Refer to the superclass documentation.
    */
-  bool update(const acg_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
-              acg_control_msgs::msg::TaskSpacePoint& task_space_command) override;
+  bool update(const xxx_control_msgs::msg::TaskSpacePoint& task_space_reference, const rclcpp::Duration& delta_t,
+              xxx_control_msgs::msg::TaskSpacePoint& task_space_command) override;
 
   /**
    * @brief Refer to the superclass documentation.
