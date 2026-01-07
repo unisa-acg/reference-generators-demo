@@ -6,7 +6,7 @@ This is the accompanying code of the paper
 
 ## Getting Started
 
-Let's start by creating and populating the colcon workspace with the `unisa_xxx_ros2` package suite and its dependencies. 
+Let's start by creating and populating the colcon workspace with the repo and its dependencies.
 In this case we will use `wstool` for convenience, which can be installed via aptitude:
 
 ```bash

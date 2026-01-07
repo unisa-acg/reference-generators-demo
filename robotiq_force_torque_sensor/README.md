@@ -3,8 +3,8 @@
 This package provides a wrapper for the Robotiq Force/Torque (F/T) sensor driver.
 It enables communication with the sensor hardware and real-time collection of force and torque data, publishing the sensor data to ROS2 topics for visualization.
 
-This package uses the sensor driver available at the following [link](https://github.com/unisa-xxx/rq_fts_ros2_driver).
-Please refer to the corresponding [Readme](https://github.com/unisa-xxx/rq_fts_ros2_driver/blob/main/README.md)
+This package uses the sensor driver available at the following [link](https://github.com/unisa-acg/rq_fts_ros2_driver).
+Please refer to the corresponding [Readme](https://github.com/unisa-acg/rq_fts_ros2_driver/blob/main/README.md)
 for more information.
 
 - The [`launch`](./launch/) folder contains the [`demo_robotiq_ft_sensor.launch.py`](./launch/demo_robotiq_ft_sensor.launch.py) file that loads the real sensor plugin and starts a  `plotjuggler` node to graphically display the measured wrenches.
