@@ -2,7 +2,7 @@
 
 This is the accompanying code of the paper
 
-> D. Risi, V. Petrone, A. Langella, L. Petrone, E. Ferrentino, P. Chiacchio, "Simplifying ROS2 controllers with a modular architecture for robot-agnostic reference generation". Under peer-review.
+> D. Risi, V. Petrone, A. Langella, L. Pagliara, E. Ferrentino, P. Chiacchio, "Simplifying ROS2 controllers with a modular architecture for robot-agnostic reference generation". Under peer-review.
 
 ## Getting Started
 
